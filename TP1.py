@@ -31,6 +31,7 @@ def eval_sol(graph,terms,sol):
 
     graph_sol = nx.Graph()
     for (i,j) in sol:
+        print(f"weight is {i,j}")
         graph_sol.add_edge(i,j,weight=graph[i][j]['weight'])
 
     # is sol a tree
@@ -53,15 +54,45 @@ def eval_sol(graph,terms,sol):
 
 # compute an approximate solution to the steiner problem
 def approx_steiner(graph,terms):
-    res=[]
+    """
+    :param graph: a graph of type nx.Graph
+    :param terms: the list of terminals in the given graph
+    :return: list of edges which makes a tree
+    """
+    print(terms)
+    res = set()
     G = nx.complete_graph(terms)
     paths = {}
-    #nx.minimum_spanning_tree()
+    counter = len(terms) #it allows us to stop when we found paths for terms
+    seen = set(set())
+    #In this loop, we compute the shortest path and update the weights
+    #  in the graph 'G'. Then we memorize the optimal paths found in
+    #  'paths'. Note that we try to avoid repetitions by looking 'seen'
+    #  in every iteration.
+    #Once we found optimal paths for all terminals, we get out of the loop.
     for node, (w, path) in nx.all_pairs_dijkstra(graph):
-        G.edge[node, path[-1]]['weight'] = w
-        paths.update({(node, path[-1]): (w,path)})
+        if node in terms :
+            for terminal in terms :
+                if (node, terminal) not in seen and node != terminal:
+                    G.edges[node, terminal]['weight'] = w[terminal]
+                    paths.update({(node, terminal): (w[terminal], path[terminal])})
+                    seen.add((node, terminal))
+            counter -= 1
+        if counter == 0 :
+            break
 
+    #This is the second part of the algorithm when we search the spanning tree
+    min_tree = nx.minimum_spanning_tree(G)
+    print(min_tree.edges)
+    print(paths)
 
+    #In this loop we add the edges of the paths.
+    #Note that we use a set to have the unicity.
+    for edge in min_tree.edges :
+        _, path = paths[edge]
+        for i in range(len(path)-1):
+            res.add((path[i], path[i+1]))
+    print(res)
     return res
 
 
@@ -91,7 +122,7 @@ if __name__ == "__main__":
         terms = my_class.terms
         graph = my_class.my_graph
         print_graph(graph,terms)
-        #sol=approx_steiner(graph,terms)
-        #print_graph(graph,terms,sol)
-        #print(eval_sol(graph,terms,sol))
+        sol=approx_steiner(graph,terms)
+        print_graph(graph,terms,sol)
+        print(eval_sol(graph,terms,sol))
 
