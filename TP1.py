@@ -31,7 +31,6 @@ def eval_sol(graph,terms,sol):
 
     graph_sol = nx.Graph()
     for (i,j) in sol:
-        print(f"weight is {i,j}")
         graph_sol.add_edge(i,j,weight=graph[i][j]['weight'])
 
     # is sol a tree
