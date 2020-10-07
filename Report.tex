@@ -9,9 +9,6 @@
 \usepackage{bbm}
 \usepackage[a4paper, margin=1.2in]{geometry}
 
-\newcommand{\R}{\mathbb{R}}
-\newcommand{\p}{\mathbb{P}}
-\newcommand{\sumN}{\sum_{i = 1}^{n}}
 \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
 \addto\captionsfrench{\renewcommand{\chaptername}{Partie}}
 
@@ -42,9 +39,9 @@
 
 	\chapter{Problème de l'arbre de Steiner}
 	\section{Contexte}
-	
+	Imaginons que nous avons un réseau avec une source et plusieurs destinations. Nous voulons avoir des chemins depuis la source vers les destinations sans être coupé par d'autres chemins. Dit autrement, nous voulons un graphe sans cycles, i.e. un arbre, en partant de la source et en ayant les destinations comme feuilles. De plus, pour aller d'un point à l'autre faut payer un coût. Le but est de trouver l'arbre qui vérifie les conditions énoncées de coût minimal.
 	\section{Modélisation}
-	
+	Nous pouvons modéliser le réseau par un graphe connexe $G = (V, E)$ avec $V$ l'ensemble des sommets et $E$ l'ensembles des arrêtes. On introduit aussi une fonction $w:E\rightarrow \mathbb{N}$ qui à chaque arrête $e\in E$ attribut un poids $w(e)$. Soit $T$ l'ensemble des "terminaux" qui sont tout simplement les destinations que nous avons énoncé.
 	\section{Complexité}
 	
 	\section{Algorithme et taux d'approximation}
