@@ -5,8 +5,12 @@ import networkx as nx
 from steinlib.instance import SteinlibInstance
 from steinlib.parser import SteinlibParser
 import scipy
+import concurrent.futures as cf
+import matplotlib.pyplot as plt
 
-stein_file = "test.std"
+stein_file = "data/test.std"
+B_opts = [82,83,138,59,61,122,111,104,220,86,88,174,165,235,318,127,131,218] #optimal solutions for files B
+C_opts = [85,144,754,1079,1579,55,102,509,707,1093,32,46,258,323,556,11,18,113,146,267] #optimal solutions for files C
 
 # draw a graph in a window
 def print_graph(graph,terms=None,sol=None):
@@ -58,7 +62,7 @@ def approx_steiner(graph,terms):
     :param terms: the list of terminals in the given graph
     :return: list of edges which makes a tree
     """
-    print(terms)
+    #print(terms)
     res = set()
     G = nx.complete_graph(terms)
     paths = {}
@@ -82,8 +86,8 @@ def approx_steiner(graph,terms):
 
     #This is the second part of the algorithm when we search the spanning tree
     min_tree = nx.minimum_spanning_tree(G)
-    print(min_tree.edges)
-    print(paths)
+    #print(min_tree.edges)
+    #print(paths)
 
     #In this loop we add the edges of the paths.
     #Note that we use a set to have the unicity.
@@ -91,7 +95,7 @@ def approx_steiner(graph,terms):
         _, path = paths[edge]
         for i in range(len(path)-1):
             res.add((path[i], path[i+1]))
-    print(res)
+    #print(res)
     return res
 
 
@@ -112,9 +116,62 @@ class MySteinlibInstance(SteinlibInstance):
         self.my_graph.add_edge(e_start,e_end,weight=weight)
 
 
+def eval_file(number_file, path):
+    """
+    Given the file's number, this function find a solution for the associated graph
+    :param number_file: the file's number
+    :return: the total weight of the solution
+    """
+    my_class = MySteinlibInstance()
+    with open(path+f'{number_file+1}.stp') as file :
+        my_parser = SteinlibParser(file, my_class)
+        my_parser.parse()
+        terms = my_class.terms
+        graph = my_class.my_graph
+        #print_graph(graph,terms)
+        sol = approx_steiner(graph,terms)
+        #print_graph(graph,terms,sol)
+        res = eval_sol(graph,terms,sol)
+    return res
+
+def simulation(data_size, path):
+    """
+    This function does the simulation with our data using parallel operations
+    :param data_size: The number of files
+    :param path: The path to those files
+    :return: results of the simulation
+    """
+    with cf.ThreadPoolExecutor() as executor :
+        res = [executor.submit(eval_file, i, path).result() for i in range(data_size)]
+    print(res)
+    return res
+
 
 if __name__ == "__main__":
     my_class = MySteinlibInstance()
+    #Results of B
+    results_B = simulation(len(B_opts), 'data/B/b')
+    plt.scatter(range(len(B_opts)), results_B, label='Approximation')
+    plt.scatter(range(len(B_opts)), B_opts, label='Optimal')
+    plt.title('Simulation on B files')
+    plt.xlabel('Number of file')
+    plt.ylabel('Weight')
+    plt.legend()
+    plt.savefig('plot_B.png')
+    plt.show()
+
+    #Results of C
+    results_C = simulation(len(C_opts), 'data/C/c')
+    plt.scatter(range(len(C_opts)), results_C, label='Approximation')
+    plt.scatter(range(len(C_opts)), C_opts, label='Optimal')
+    plt.title('Simulation on C files')
+    plt.xlabel('Number of file')
+    plt.ylabel('Weight')
+    plt.legend()
+    plt.savefig('plot_C.png')
+    plt.show()
+
+    """
     with open(stein_file) as my_file:
         my_parser = SteinlibParser(my_file, my_class)
         my_parser.parse()
@@ -124,4 +181,5 @@ if __name__ == "__main__":
         sol=approx_steiner(graph,terms)
         print_graph(graph,terms,sol)
         print(eval_sol(graph,terms,sol))
+    """
 
