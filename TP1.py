@@ -103,8 +103,9 @@ def approx_steiner(graph,terms):
 # class used to read a steinlib instance
 class MySteinlibInstance(SteinlibInstance):
 
-    my_graph = nx.Graph()
-    terms = []
+    def __init__(self):
+        self.my_graph = nx.Graph()
+        self.terms = []
 
     def terminals__t(self, line, converted_token):
         self.terms.append(converted_token[0])
@@ -171,7 +172,6 @@ if __name__ == "__main__":
     plt.savefig('plot_C.png')
     plt.show()
 
-    """
     with open(stein_file) as my_file:
         my_parser = SteinlibParser(my_file, my_class)
         my_parser.parse()
@@ -181,5 +181,3 @@ if __name__ == "__main__":
         sol=approx_steiner(graph,terms)
         print_graph(graph,terms,sol)
         print(eval_sol(graph,terms,sol))
-    """
-
