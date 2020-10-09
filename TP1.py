@@ -8,9 +8,12 @@ import scipy
 import concurrent.futures as cf
 import matplotlib.pyplot as plt
 
-stein_file = "data/test.std"
-B_opts = [82,83,138,59,61,122,111,104,220,86,88,174,165,235,318,127,131,218] #optimal solutions for files B
-C_opts = [85,144,754,1079,1579,55,102,509,707,1093,32,46,258,323,556,11,18,113,146,267] #optimal solutions for files C
+stein_file = "data/B/b1.stp"
+
+#optimal solutions for files B
+B_opts = [82,83,138,59,61,122,111,104,220,86,88,174,165,235,318,127,131,218]
+#optimal solutions for files C
+C_opts = [85,144,754,1079,1579,55,102,509,707,1093,32,46,258,323,556,11,18,113,146,267]
 
 # draw a graph in a window
 def print_graph(graph,terms=None,sol=None):
@@ -152,10 +155,13 @@ if __name__ == "__main__":
     my_class = MySteinlibInstance()
     #Results of B
     results_B = simulation(len(B_opts), 'data/B/b')
-    plt.scatter(range(len(B_opts)), results_B, label='Approximation')
-    plt.scatter(range(len(B_opts)), B_opts, label='Optimal')
+    approximation_rate_B = sum([(results_B[i] - B_opts[i])/B_opts[i] for i in range(len(results_B))])/len(results_B)
+    plt.scatter(range(1,len(B_opts)+1), results_B, label='Approximation')
+    plt.scatter(range(1, len(B_opts)+1), B_opts, label='Optimal')
     plt.title('Simulation on B files')
+    plt.text(1,260, f"Approximation rate = {round(approximation_rate_B, 2)}")
     plt.xlabel('Number of file')
+    plt.xticks(range(1, len(B_opts)+1))
     plt.ylabel('Weight')
     plt.legend()
     plt.savefig('plot_B.png')
@@ -163,10 +169,13 @@ if __name__ == "__main__":
 
     #Results of C
     results_C = simulation(len(C_opts), 'data/C/c')
-    plt.scatter(range(len(C_opts)), results_C, label='Approximation')
-    plt.scatter(range(len(C_opts)), C_opts, label='Optimal')
+    approximation_rate_C = sum([(results_C[i] - C_opts[i])/C_opts[i] for i in range(len(results_C))])/len(results_C)
+    plt.scatter(range(1, len(C_opts)+1), results_C, label='Approximation')
+    plt.scatter(range(1, len(C_opts)+1), C_opts, label='Optimal')
     plt.title('Simulation on C files')
+    plt.text(13,1300, f"Approximation rate = {round(approximation_rate_C, 2)}")
     plt.xlabel('Number of file')
+    plt.xticks(range(1, len(C_opts)+1))
     plt.ylabel('Weight')
     plt.legend()
     plt.savefig('plot_C.png')
