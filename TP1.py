@@ -5,7 +5,7 @@ import networkx as nx
 from steinlib.instance import SteinlibInstance
 from steinlib.parser import SteinlibParser
 import scipy
-import concurrent.futures as cf
+from threading import Thread
 import matplotlib.pyplot as plt
 
 stein_file = "data/B/b1.stp"
@@ -120,12 +120,17 @@ class MySteinlibInstance(SteinlibInstance):
         self.my_graph.add_edge(e_start,e_end,weight=weight)
 
 
-def eval_file(number_file, path):
+def eval_file(number_file, path, res, i):
     """
-    Given the file's number, this function find a solution for the associated graph
+    Given the file's number, this function finds a solution for the associated graph and store it
+        in the list passed as argument.
     :param number_file: the file's number
+    :param path: the path to the file
+    :param res: the list in which the result will be stored in
+    :param i: the index of the free place in the list
     :return: the total weight of the solution
     """
+    print(f"Processing file number {number_file} begins.\n")
     my_class = MySteinlibInstance()
     with open(path+f'{number_file+1}.stp') as file :
         my_parser = SteinlibParser(file, my_class)
@@ -135,8 +140,9 @@ def eval_file(number_file, path):
         #print_graph(graph,terms)
         sol = approx_steiner(graph,terms)
         #print_graph(graph,terms,sol)
-        res = eval_sol(graph,terms,sol)
-    return res
+        result = eval_sol(graph,terms,sol)
+    print(f'Processing file number {number_file} ended.\n')
+    res[i] = result
 
 def simulation(data_size, path):
     """
@@ -145,8 +151,15 @@ def simulation(data_size, path):
     :param path: The path to those files
     :return: results of the simulation
     """
-    with cf.ThreadPoolExecutor() as executor :
-        res = [executor.submit(eval_file, i, path).result() for i in range(data_size)]
+
+    res = [0 for _ in range(data_size)]
+    threads = []
+    for i in range(data_size) :
+        threads.append(Thread(target=eval_file, args=(i, path, res, i)))
+        threads[i].start()
+
+    for i in range(data_size):
+        threads[i].join()
     print(res)
     return res
 
