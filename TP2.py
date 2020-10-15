@@ -27,10 +27,12 @@ def recuit(graph, terms, nb_iter=100):
     eval_best = eval_genetic(best, graph, terms, 500)
     coeff = 2
     for i in range(nb_iter):
+        print(solutions)
         generation(solutions)
         for sol in solutions :
             eval_sol =  eval_genetic(sol, graph, terms, eval_best)
             if eval_sol > coeff*eval_best :
+                #TODO problème est là
                 solutions.remove(sol)
             elif eval_sol < eval_best:
                 best = sol
@@ -62,7 +64,7 @@ def generation(solutions : list, proba = .01) :
     :param terms:
     :return:
     """
-    print(solutions)
+    #print(solutions)
     rd.seed(42)
     new_generation = []
     nb_changes = round(rd.random()*round(len(solutions)/2))
@@ -110,7 +112,7 @@ if __name__ == "__main__" :
         my_parser.parse()
         terms = my_class.terms
         graph = my_class.my_graph
-        TP1.print_graph(graph,terms)
+        #TP1.print_graph(graph,terms)
         sol=recuit(graph,terms)
         TP1.print_graph(graph,terms,sol)
         print(TP1.eval_sol(graph,terms,sol))
