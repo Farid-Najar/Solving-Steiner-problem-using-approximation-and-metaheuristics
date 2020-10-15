@@ -13,7 +13,7 @@ import random as rd
 
 stein_file = "data/B/b1.stp"
 
-def recuit(graph, terms, nb_iter=100):
+def recuit(graph, terms, nb_iter=20):
     """
     This is the main.
     :param graph:
@@ -22,25 +22,26 @@ def recuit(graph, terms, nb_iter=100):
     :return:
     """
     best = init(graph, terms)
-    solutions = []
-    solutions.append(best)
+    solutions = [best]
     eval_best = eval_genetic(best, graph, terms, 500)
-    coeff = 2
+    graph_edges = [e for e in graph.edges]
+    coeff = 3
     for i in range(nb_iter):
-        print(solutions)
+        print(len(solutions))
         generation(solutions)
         for sol in solutions :
-            eval_sol =  eval_genetic(sol, graph, terms, eval_best)
-            if eval_sol > coeff*eval_best :
-                #TODO problème est là
-                solutions.remove(sol)
-            elif eval_sol < eval_best:
-                best = sol
+            if sol != best :
+                eval_sol =  eval_genetic(sol, graph, terms, eval_best)
+                if eval_sol > coeff*eval_best :
+                    solutions.remove(sol)
+                elif eval_sol < eval_best:
+                    best = sol
         eval_best = eval_genetic(best, graph, terms, eval_best)
     solution = set()
+    assert len(graph.edges) == len(best)
     for i in range(len(best)):
         if best[i] :
-            solution.add(graph.edges[i])
+            solution.add(graph_edges[i])
     return solution
 
 
@@ -52,11 +53,11 @@ def init(graph, terms):
     :return:
     """
     sol = TP1.approx_steiner(graph, terms)
-    edges = [e for e in graph.edges]
-    return [(edges[i] in sol) for i in range(len(edges))]
+    print(f'evaluation of the initial solution = {TP1.eval_sol(graph,terms,sol)}')
+    return edges_to_bool(sol, [e for e in graph.edges])
 
 
-def generation(solutions : list, proba = .01) :
+def generation(solutions : list, proba = .1) :
     """
     Generate new generation of solutions.
     :param sol:
@@ -67,7 +68,7 @@ def generation(solutions : list, proba = .01) :
     #print(solutions)
     rd.seed(42)
     new_generation = []
-    nb_changes = round(rd.random()*round(len(solutions)/2))
+    nb_changes = round(rd.random()*round(len(solutions)/2)) + 1
     for i in range(nb_changes) :
         s1 = rd.choice(solutions)
         s2 = rd.choice(solutions)
@@ -88,22 +89,40 @@ def eval_genetic(sol, graph, terms, malus):
     :param sol:
     :param graph:
     :param terms:
+    :param malus:
     :return:
     """
     graph_sol = nx.Graph()
-    nb_absent_terms = 0
+    nb_absent_terms = len(terms)
     edges = [e for e in graph.edges]
+    assert len(edges) == len(sol)
     for i in range(len(sol)):
         if sol[i] :
             (k, j) = edges[i]
+            if k in terms :
+                nb_absent_terms -= 1
+            if j in terms :
+                nb_absent_terms -= 1
             graph_sol.add_edge(k,j,weight=graph[k][j]['weight'])
-
-    for t in terms:
-        if t not in graph_sol.nodes:
-            nb_absent_terms +=1
-
     weights = graph_sol.size(weight='weight')
+    print(f'absent elements = {nb_absent_terms}')
+    print(f'connexe compo = {nx.number_connected_components(graph_sol)-1}')
     return weights + malus*nb_absent_terms + malus*(nx.number_connected_components(graph_sol)-1)
+
+def edges_to_bool(edges : set, graph_edges):
+    """
+    It converts a set of edges to a list of booleans
+        k-th element of the list tells if graph_edges[k] is in the set or not
+    :param edges: set of edges
+    :return: list of booleans
+    """
+    print(edges)
+    print(edges.intersection(graph_edges))
+    res = [False for _ in range(len(graph_edges))]
+    for i in range(len(graph_edges)):
+        res[i] = (graph_edges[i] in edges)
+    return res
+
 
 if __name__ == "__main__" :
     my_class = TP1.MySteinlibInstance()

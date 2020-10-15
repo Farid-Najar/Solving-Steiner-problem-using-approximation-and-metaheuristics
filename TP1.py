@@ -38,6 +38,9 @@ def eval_sol(graph,terms,sol):
 
     graph_sol = nx.Graph()
     for (i,j) in sol:
+        if (i, j) not in graph.edges :
+            print('Error : invalide edge')
+            return -1
         graph_sol.add_edge(i,j,weight=graph[i][j]['weight'])
 
     # is sol a tree
