@@ -1,12 +1,7 @@
-import sys
 import itertools as it
-import matplotlib.pyplot as plt
 import networkx as nx
-from steinlib.instance import SteinlibInstance
 from steinlib.parser import SteinlibParser
-import scipy
 from threading import Thread
-import matplotlib.pyplot as plt
 import Approximation
 import random as rd
 import copy as cp
@@ -142,7 +137,7 @@ def bool_to_edges(sol, graph_edges):
             solution.add(graph_edges[i])
     return solution
 
-if __name__ == "__main__" :
+def simulation() :
     my_class = Approximation.MySteinlibInstance()
     with open(stein_file) as my_file:
         my_parser = SteinlibParser(my_file, my_class)
