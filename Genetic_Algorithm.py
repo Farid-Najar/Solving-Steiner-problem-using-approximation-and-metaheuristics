@@ -19,32 +19,35 @@ def genetic(graph, terms, nb_iter=500, taille_max_population = 10):
     :return:
     """
     graph_edges = [e for e in graph.edges]
-    best = init(graph, terms)
+    best = init(graph)
+    best_list = []
     #print(bool_to_edges(best, graph_edges))
     #print(terms)
     eval_best = eval_genetic(best, graph, terms)
+    best_list.append(eval_best)
     solutions = {eval_best : best}
     i = 0
     while(i < nb_iter ):#or TP1.eval_sol(graph, terms, bool_to_edges(best, graph_edges)) == -1):
         #print(len(solutions))
-        print(f'{i} = {eval_best}')
+        #print(f'{i} = {eval_best}')
         generation(graph, terms, solutions)
-        print(f'keys = {solutions.keys()}')
+        #print(f'keys = {solutions.keys()}')
         #print(f'len(solutions) = {len(solutions)}')
         for eval_sol, sol in solutions.items() :
             if sol != best :                #print(f'{i} = {eval_sol}')
                 if eval_sol < eval_best:
                     best = cp.copy(sol)
                     eval_best = eval_sol
+                    best_list.append(eval_best)
         solutions = selection(solutions, taille_max_population)
         i+=1
-    return bool_to_edges(best, graph_edges)
+    return bool_to_edges(best, graph_edges), best_list
 
 def selection(solutions : dict, taille_max_population) :
     solutions = {key : val for key, val in sorted(solutions.items(), key= lambda sol: sol[0])}
     return dict(it.islice(solutions.items(), taille_max_population))
 
-def init(graph, terms):
+def init(graph):
     """
     This gives the first proposition of solution for the algorithm.
     :param graph:
@@ -113,11 +116,11 @@ def edges_to_bool(sol : set, graph_edges):
     :param edges: set of edges
     :return: list of booleans
     """
-    print(sol)
+    #print(sol)
     for s in sol :
         if s not in graph_edges :
             print(f'probleme pour {s}')
-    print(sol.intersection(graph_edges))
+    #print(sol.intersection(graph_edges))
     res = [False for _ in range(len(graph_edges))]
     for i in range(len(graph_edges)):
         res[i] = (graph_edges[i] in sol)
@@ -131,20 +134,53 @@ def bool_to_edges(sol, graph_edges):
     :return: a set of edges
     """
     solution = set()
-    assert len(graph.edges) == len(sol)
+    assert len(graph_edges) == len(sol)
     for i in range(len(sol)):
         if sol[i] :
             solution.add(graph_edges[i])
     return solution
 
-def simulation() :
+
+def eval_file(number_file, path, res, i):
+    """
+    Given the file's number, this function finds a solution for the associated graph and store it
+        in the list passed as argument.
+    :param number_file: the file's number
+    :param path: the path to the file
+    :param res: the list in which the result will be stored in
+    :param i: the index of the free place in the list
+    :return: the total weight of the solution
+    """
+    print(f"Processing file number {number_file} begins for genetic algorithm.\n")
     my_class = Approximation.MySteinlibInstance()
-    with open(stein_file) as my_file:
-        my_parser = SteinlibParser(my_file, my_class)
+    with open(path+f'{number_file+1}.stp') as file :
+        my_parser = SteinlibParser(file, my_class)
         my_parser.parse()
         terms = my_class.terms
         graph = my_class.my_graph
-        #TP1.print_graph(graph,terms)
-        sol=genetic(graph,terms)
-        Approximation.print_graph(graph,terms,sol)
-        print(Approximation.eval_sol(graph,terms,sol))
+        #print_graph(graph,terms)
+        sol, best_list = genetic(graph,terms)
+        #print_graph(graph,terms,sol)
+        result = Approximation.eval_sol(graph,terms,sol)
+    print(f'Processing file number {number_file} ended.\n')
+    res[i] = (result, best_list)
+
+
+def simulation(data_size, path):
+    """
+    This function does the simulation with our data using parallel operations
+    :param data_size: The number of files
+    :param path: The path to those files
+    :return: results of the simulation
+    """
+
+    res = [0 for _ in range(data_size)]
+    threads = []
+    for i in range(data_size) :
+        threads.append(Thread(target=eval_file, args=(i, path, res, i)))
+        threads[i].start()
+
+    for i in range(data_size):
+        threads[i].join()
+    print(res)
+    return res

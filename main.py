@@ -1,5 +1,5 @@
 import Approximation
-import Genetic_Algorithm
+import Genetic_Algorithm as GA
 import matplotlib.pyplot as plt
 
 path_B = 'data/B/'
@@ -13,7 +13,7 @@ C_opts = [85,144,754,1079,1579,55,102,509,707,1093,32,46,258,323,556,11,18,113,1
 
 
 def simulation_Approximation() :
-    my_class = Approximation.MySteinlibInstance()
+    #my_class = Approximation.MySteinlibInstance()
     #Results of B
     results_B = Approximation.simulation(len(B_opts), 'data/B/b')
     approximation_rate_B = sum([(results_B[i] - B_opts[i])/B_opts[i] for i in range(len(results_B))])/len(results_B)
@@ -42,6 +42,7 @@ def simulation_Approximation() :
     plt.savefig('plot_C.png')
     plt.show()
 
+    """
     with open(stein_file) as my_file:
         my_parser = Approximation.SteinlibParser(my_file, my_class)
         my_parser.parse()
@@ -51,17 +52,26 @@ def simulation_Approximation() :
         sol=Approximation.approx_steiner(graph,terms)
         Approximation.print_graph(graph,terms,sol)
         print(Approximation.eval_sol(graph,terms,sol))
-
+    """
 
 def simulation_Genetic():
-    #TODO
-    return 0
+    results = [(None, None) for _ in range (25)]
+    res = [None for _ in range(25)]
+    #simulation on b1.stp
+    for i in range(len(res)):
+        GA.eval_file(1, path_B+'b', results, i)
+        res[i] = results[i][1]
+        plt.plot(range(len(results[i][1])),res[i], color = '#7DD6CA')
+
+    plt.axhline(B_opts[0], color='red')
+    plt.clabel()
+    plt.show()
 
 if __name__ == '__main__' :
     print('Simulation begins')
     print('------------------------------------------------------------------------------------')
     print('processing simulation for Approximation.py')
-    simulation_Approximation()
+    #simulation_Approximation()
     print('simulation for Approximation.py done')
     print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
 

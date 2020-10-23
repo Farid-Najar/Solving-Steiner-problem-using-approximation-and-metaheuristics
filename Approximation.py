@@ -2,7 +2,6 @@ import matplotlib.pyplot as plt
 import networkx as nx
 from steinlib.instance import SteinlibInstance
 from steinlib.parser import SteinlibParser
-#import scipy
 from threading import Thread
 
 # draw a graph in a window
