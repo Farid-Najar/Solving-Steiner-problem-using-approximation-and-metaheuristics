@@ -78,7 +78,7 @@ def eval_annealing(sol, graph, terms : list, malus = 500):
     #print(f'connexe compo = {nx.number_connected_components(graph_sol)-1}')
     return weights + 2*malus*nb_absent_terms + malus*(nx.number_connected_components(graph_sol)-1)
 
-def rand_neighbor(solution : list, nb_changes = 2) :
+def rand_neighbor(solution : list, nb_changes = 1) :
     """
     Generates new random solution.
     :param solution: the solution for which we search a neighbor
@@ -87,9 +87,9 @@ def rand_neighbor(solution : list, nb_changes = 2) :
     """
     new_solution = cp.deepcopy(solution)
 
-    #for _ in range(nb_changes):
-    i = rd.choice(range(len(new_solution)))
-    new_solution[i] = not new_solution[i]
+    for _ in range(nb_changes):
+        i = rd.choice(range(len(new_solution)))
+        new_solution[i] = not new_solution[i]
     return new_solution
 
 if __name__ == '__main__' :
