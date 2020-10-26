@@ -1,20 +1,42 @@
-import itertools as it
+#import itertools as it
 import networkx as nx
-from steinlib.parser import SteinlibParser
 from threading import Thread
 import Approximation
 import random as rd
 import copy as cp
+from numpy import exp
+import Genetic_Algorithm
 
-def recuit(graph, terms : list) :
+def recuit(graph : nx.Graph, terms : list, T_init, T_limit, lamb = .99) -> set :
     """
     This function finds a solution for the steiner problem
         using annealing algorithm
     :param graph: the graph for each we search a solution
     :param terms: the list of terminal nodes
+    :param T_init: the initial temperature
+    :param T_limit: the lowest temperature allowed
     :return: the solution found which is a set of edges
     """
-    return 0
+    best = init(graph)
+    T = T_init
+    eval_best = eval_annealing(best, graph, terms)
+    m = 0
+    while(T>T_limit):
+        sol = rand_neighbor(best)
+        eval_sol = eval_annealing(sol, graph, terms)
+        if eval_sol <= eval_best :
+            prob = 1
+        else :
+            prob = exp((eval_best - eval_sol)/T)
+            print(f'prob = {prob}')
+        if rd.random() <= prob :
+            best = sol
+        print(f'eval_best = {eval_best}')
+        T *= lamb
+        m += 1
+    graph_edges = [e for e in graph.edges]
+    print(f'm = {m}')
+    return Genetic_Algorithm.bool_to_edges(best, graph_edges)
 
 def init(graph):
     """
@@ -57,3 +79,30 @@ def eval_annealing(sol, graph, terms : list, malus = 500):
     #print(f'connexe compo = {nx.number_connected_components(graph_sol)-1}')
     return weights + 2*malus*nb_absent_terms + malus*(nx.number_connected_components(graph_sol)-1)
 
+def rand_neighbor(solution : list, nb_changes = 2) :
+    """
+    Generates new random solution.
+    :param solution:
+    :param nb_changes:
+    :return:
+    """
+    new_solution = cp.deepcopy(solution)
+
+    #for _ in range(nb_changes):
+    i = rd.choice(range(len(new_solution)))
+    new_solution[i] = not new_solution[i]
+    return new_solution
+
+if __name__ == '__main__' :
+    stein_file = 'data/test.std'
+    #stein_file = 'data/B/b1.stp'
+    my_class = Approximation.MySteinlibInstance()
+    with open(stein_file) as my_file:
+        my_parser = Approximation.SteinlibParser(my_file, my_class)
+        my_parser.parse()
+        terms = my_class.terms
+        graph = my_class.my_graph
+        #Approximation.print_graph(graph,terms)
+        sol=recuit(graph,terms, 500, 1)
+        Approximation.print_graph(graph,terms,sol)
+        print(Approximation.eval_sol(graph,terms,sol))

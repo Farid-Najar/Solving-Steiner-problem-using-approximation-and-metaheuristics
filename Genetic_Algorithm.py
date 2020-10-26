@@ -1,6 +1,5 @@
 import itertools as it
 import networkx as nx
-from steinlib.parser import SteinlibParser
 from threading import Thread
 import Approximation
 import random as rd
@@ -155,7 +154,7 @@ def eval_file(number_file : int, path : str, res : list, i : int):
     print(f"Processing file number {number_file} begins for genetic algorithm.\n")
     my_class = Approximation.MySteinlibInstance()
     with open(path+f'{number_file+1}.stp') as file :
-        my_parser = SteinlibParser(file, my_class)
+        my_parser = Approximation.SteinlibParser(file, my_class)
         my_parser.parse()
         terms = my_class.terms
         graph = my_class.my_graph
