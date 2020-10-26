@@ -13,9 +13,9 @@ stein_file = "data/B/b1.stp"
 def genetic(graph, terms, nb_iter=500, taille_max_population = 10):
     """
     This is the main.
-    :param graph:
-    :param terms:
-    :param nb_iter:
+    :param graph: the graph for each we search a solution
+    :param terms: the list of terminal nodes
+    :param nb_iter: maximum number of iterations
     :return:
     """
     graph_edges = [e for e in graph.edges]
@@ -50,19 +50,20 @@ def selection(solutions : dict, taille_max_population) :
 def init(graph):
     """
     This gives the first proposition of solution for the algorithm.
-    :param graph:
-    :param terms:
+    :param graph: the graph for each we search a solution
     :return:
     """
     #sol = TP1.approx_steiner(graph, terms)
     return [round(rd.random()) == 1 for _ in range(len(graph.edges))]#edges_to_bool(sol, [e for e in graph.edges])
 
 
-def generation(graph, terms, solutions : dict, proba = .1, nb_changes = 2) :
+def generation(graph, terms, solutions : dict, nb_changes = 2) :
     """
     Generates new generation of solutions.
+    :param graph:
+    :param terms: the list of terminal nodes
     :param solutions:
-    :param proba:
+    :param nb_changes:
     :return:
     """
     #print(solutions)
@@ -79,14 +80,14 @@ def generation(graph, terms, solutions : dict, proba = .1, nb_changes = 2) :
         new_generation[i][j] = not new_generation[i][j]
         solutions.update({eval_genetic(new_generation[i], graph, terms) : new_generation[i]})
 
-def eval_genetic(sol, graph, terms, malus = 500):
+def eval_genetic(sol : list, graph, terms : list, malus = 500):
     """
-    This evaluates the algorithm.
-    :param sol:
-    :param graph:
-    :param terms:
-    :param malus:
-    :return:
+    This evaluates the solution of the algorithm.
+    :param sol: the solution which is list of booleans
+    :param graph: the graph for each we search a solution
+    :param terms: the list of terminal nodes
+    :param malus: the coefficient that we use to penalize bad solutions
+    :return: the evaluation of the solution which is an integer
     """
     graph_sol = nx.Graph()
     nb_absent_terms = len(terms)
@@ -126,7 +127,7 @@ def edges_to_bool(sol : set, graph_edges):
         res[i] = (graph_edges[i] in sol)
     return res
 
-def bool_to_edges(sol, graph_edges):
+def bool_to_edges(sol : list, graph_edges):
     """
     It converts a boolean table into edges
     :param sol: a table of boolean
@@ -141,7 +142,7 @@ def bool_to_edges(sol, graph_edges):
     return solution
 
 
-def eval_file(number_file, path, res, i):
+def eval_file(number_file : int, path : str, res : list, i : int):
     """
     Given the file's number, this function finds a solution for the associated graph and store it
         in the list passed as argument.
@@ -166,7 +167,7 @@ def eval_file(number_file, path, res, i):
     res[i] = (result, best_list)
 
 
-def simulation(data_size, path):
+def simulation(data_size : int, path : str):
     """
     This function does the simulation with our data using parallel operations
     :param data_size: The number of files
