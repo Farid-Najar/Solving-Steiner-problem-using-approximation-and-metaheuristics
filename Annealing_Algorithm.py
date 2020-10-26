@@ -34,9 +34,8 @@ def recuit(graph : nx.Graph, terms : list, T_init, T_limit, lamb = .99) -> set :
         print(f'eval_best = {eval_best}')
         T *= lamb
         m += 1
-    graph_edges = [e for e in graph.edges]
     print(f'm = {m}')
-    return Genetic_Algorithm.bool_to_edges(best, graph_edges)
+    return Genetic_Algorithm.bool_to_edges(best, [e for e in graph.edges])
 
 def init(graph):
     """
@@ -82,9 +81,9 @@ def eval_annealing(sol, graph, terms : list, malus = 500):
 def rand_neighbor(solution : list, nb_changes = 2) :
     """
     Generates new random solution.
-    :param solution:
-    :param nb_changes:
-    :return:
+    :param solution: the solution for which we search a neighbor
+    :param nb_changes: maximum number of the changes alowed
+    :return: returns a random neighbor for the solution
     """
     new_solution = cp.deepcopy(solution)
 
