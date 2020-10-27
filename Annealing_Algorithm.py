@@ -21,6 +21,7 @@ def recuit(graph : nx.Graph, terms : list, T_init, T_limit, lamb = .99) -> set :
     T = T_init
     eval_best = eval_annealing(best, graph, terms)
     m = 0
+    #sol = init(graph)
     while(T>T_limit):
         sol = rand_neighbor(best)#, nb_changes=int(T)%len(best))
         eval_sol = eval_annealing(sol, graph, terms)
@@ -29,12 +30,17 @@ def recuit(graph : nx.Graph, terms : list, T_init, T_limit, lamb = .99) -> set :
         else :
             prob = exp((eval_best - eval_sol)/T)
             print(f'prob = {prob}')
-        if rd.random() <= prob :
-            best = sol
+        rand = rd.random()
+        if rand <= prob :
+            best = cp.deepcopy(sol)
+            eval_best = eval_sol
+            print('best changed !!!!!!!!!!!!!!!!!')
+        print(f'eval_sol = {eval_sol}')
         print(f'eval_best = {eval_best}')
         T *= lamb
         m += 1
     print(f'm = {m}')
+    print(eval_best)
     return Genetic_Algorithm.bool_to_edges(best, [e for e in graph.edges])
 
 def init(graph):
@@ -88,13 +94,17 @@ def rand_neighbor(solution : list, nb_changes = 1) :
     new_solution = cp.deepcopy(solution)
 
     for _ in range(nb_changes):
+        """
+        i, j = rd.sample(range(len(new_solution)), k = 2)
+        new_solution[i], new_solution[j] = new_solution[j], new_solution[i]
+        """
         i = rd.choice(range(len(new_solution)))
         new_solution[i] = not new_solution[i]
     return new_solution
 
 if __name__ == '__main__' :
-    stein_file = 'data/test.std'
-    #stein_file = 'data/B/b1.stp'
+    #stein_file = 'data/test.std'
+    stein_file = 'data/B/b1.stp'
     my_class = Approximation.MySteinlibInstance()
     with open(stein_file) as my_file:
         my_parser = Approximation.SteinlibParser(my_file, my_class)
@@ -102,6 +112,7 @@ if __name__ == '__main__' :
         terms = my_class.terms
         graph = my_class.my_graph
         #Approximation.print_graph(graph,terms)
-        sol=recuit(graph,terms, 500, 1)
+        sol=recuit(graph,terms, 20000, 1)
         Approximation.print_graph(graph,terms,sol)
+        print(f'len(nodes) = {len(graph.nodes)}')
         print(Approximation.eval_sol(graph,terms,sol))

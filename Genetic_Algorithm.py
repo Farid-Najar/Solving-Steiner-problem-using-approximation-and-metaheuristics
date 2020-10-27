@@ -50,7 +50,7 @@ def init(graph):
     """
     This gives the first proposition of solution for the algorithm.
     :param graph: the graph for each we search a solution
-    :return:
+    :return: returns a random boolean list
     """
     #sol = TP1.approx_steiner(graph, terms)
     return [round(rd.random()) == 1 for _ in range(len(graph.edges))]#edges_to_bool(sol, [e for e in graph.edges])
@@ -59,11 +59,11 @@ def init(graph):
 def generation(graph, terms, solutions : dict, nb_changes = 2) :
     """
     Generates new generation of solutions.
-    :param graph:
+    :param graph: the graph for each we search a solution
     :param terms: the list of terminal nodes
-    :param solutions:
-    :param nb_changes:
-    :return:
+    :param solutions: it is a dict containing the current population
+    :param nb_changes: the maximum number of crossing alloxed
+    :return: it doesn't return anything but updates solutions with new generation
     """
     #print(solutions)
     #new_generation = {}
