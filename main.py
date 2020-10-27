@@ -54,7 +54,7 @@ def simulation_Approximation() :
         print(Approximation.eval_sol(graph,terms,sol))
     """
 
-def simulation_Genetic():
+def simulation_Genetic_evolution_best_evaluation():
     results = [(None, None) for _ in range (25)]
     res = [None for _ in range(25)]
     #simulation on b1.stp
@@ -64,7 +64,10 @@ def simulation_Genetic():
         plt.plot(range(len(results[i][1])),res[i], color = '#7DD6CA')
 
     plt.axhline(B_opts[0], color='red')
-    plt.clabel()
+    plt.text(40, 500, 'Optimal solution in red')
+    plt.title('The evolution of the best evaluation for graph b1.stp for 25 simulation')
+    plt.legend()
+    plt.savefig('best_evaluation_evolution.png')
     plt.show()
 
 if __name__ == '__main__' :
@@ -77,6 +80,6 @@ if __name__ == '__main__' :
 
     print('------------------------------------------------------------------------------------')
     print('processing simulation for Genetic_Algorithm.py')
-    simulation_Genetic()
+    #simulation_Genetic_evolution_best_evaluation()
     print('simulation for Genetic_Algorithm.py done')
     print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')

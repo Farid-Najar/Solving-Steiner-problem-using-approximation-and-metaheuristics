@@ -22,7 +22,7 @@ def recuit(graph : nx.Graph, terms : list, T_init, T_limit, lamb = .99) -> set :
     eval_best = eval_annealing(best, graph, terms)
     m = 0
     while(T>T_limit):
-        sol = rand_neighbor(best)
+        sol = rand_neighbor(best)#, nb_changes=int(T)%len(best))
         eval_sol = eval_annealing(sol, graph, terms)
         if eval_sol <= eval_best :
             prob = 1
