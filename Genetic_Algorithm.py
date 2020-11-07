@@ -18,7 +18,7 @@ def genetic(graph, terms, nb_iter=500, taille_max_population = 10):
     :return:
     """
     graph_edges = [e for e in graph.edges]
-    best = init(graph)
+    best = init(graph, terms)
     best_list = []
     #print(bool_to_edges(best, graph_edges))
     #print(terms)
@@ -42,18 +42,55 @@ def genetic(graph, terms, nb_iter=500, taille_max_population = 10):
         i+=1
     return bool_to_edges(best, graph_edges), best_list
 
+
+# 
+def genetic2(graph, terms, nb_iter=500, taille_max_population = 10):
+    """
+    This is the main.
+    :param graph: the graph for each we search a solution
+    :param terms: the list of terminal nodes
+    :param nb_iter: maximum number of iterations
+    :return:
+    """
+    graph_edges = [e for e in graph.edges]
+    best = init(graph,terms)
+    eval_list = []
+    #print(bool_to_edges(best, graph_edges))
+    #print(terms)
+    eval_best = eval_genetic(best, graph, terms)
+    eval_list.append(eval_best)
+    solutions = {eval_best : best}
+    i = 0
+    while(i < nb_iter ):#or TP1.eval_sol(graph, terms, bool_to_edges(best, graph_edges)) == -1):
+        #print(len(solutions))
+        #print(f'{i} = {eval_best}')
+        generation(graph, terms, solutions)
+        #print(f'keys = {solutions.keys()}')
+        #print(f'len(solutions) = {len(solutions)}')
+        for eval_sol, sol in solutions.items() :
+            if sol != best :                #print(f'{i} = {eval_sol}')
+                if eval_sol < eval_best:
+                    best = cp.copy(sol)
+                    eval_best = eval_sol
+        solutions = selection(solutions, taille_max_population)
+        eval_list.append(eval_best)
+        i+=1
+    return bool_to_edges(best, graph_edges), eval_list
+
 def selection(solutions : dict, taille_max_population) :
     solutions = {key : val for key, val in sorted(solutions.items(), key= lambda sol: sol[0])}
     return dict(it.islice(solutions.items(), taille_max_population))
 
-def init(graph):
+def init(graph, terms):
     """
     This gives the first proposition of solution for the algorithm.
     :param graph: the graph for each we search a solution
     :return: returns a random boolean list
     """
-    #sol = TP1.approx_steiner(graph, terms)
-    return [round(rd.random()) == 1 for _ in range(len(graph.edges))]#edges_to_bool(sol, [e for e in graph.edges])
+    #sol = Approximation.approx_steiner(graph, terms)
+    #return edges_to_bool(sol, [e for e in graph.edges])
+    #return [round(rd.random()) == 1 for _ in range(len(graph.edges))]
+    return [1 for _ in range(len(graph.edges))]
 
 
 def generation(graph, terms, solutions : dict, nb_changes = 2) :
@@ -164,6 +201,30 @@ def eval_file(number_file : int, path : str, res : list, i : int):
         result = Approximation.eval_sol(graph,terms,sol)
     print(f'Processing file number {number_file} ended.\n')
     res[i] = (result, best_list)
+
+def eval_file2(number_file : int, path : str, res : list, i : int):
+    """
+    Given the file's number, this function finds a solution for the associated graph and store it
+        in the list passed as argument.
+    :param number_file: the file's number
+    :param path: the path to the file
+    :param res: the list in which the result will be stored in
+    :param i: the index of the free place in the list
+    :return: the total weight of the solution
+    """
+    print(f"Processing file number {number_file} begins for genetic algorithm.\n")
+    my_class = Approximation.MySteinlibInstance()
+    with open(path+f'{number_file}.stp') as file :
+        my_parser = Approximation.SteinlibParser(file, my_class)
+        my_parser.parse()
+        terms = my_class.terms
+        graph = my_class.my_graph
+        #print_graph(graph,terms)
+        sol, eval_list = genetic2(graph,terms)
+        #print_graph(graph,terms,sol)
+        result = Approximation.eval_sol(graph,terms,sol)
+    print(f'Processing file number {number_file} ended.\n')
+    res[i] = (result, eval_list)
 
 
 def simulation(data_size : int, path : str):

@@ -1,6 +1,7 @@
 import Approximation
 import Genetic_Algorithm as GA
 import matplotlib.pyplot as plt
+import numpy as np
 
 path_B = 'data/B/'
 path_C = 'data/C/'
@@ -13,7 +14,6 @@ C_opts = [85,144,754,1079,1579,55,102,509,707,1093,32,46,258,323,556,11,18,113,1
 
 
 def simulation_Approximation() :
-    print("aa")
     #my_class = Approximation.MySteinlibInstance()
     #Results of B
     results_B = Approximation.simulation(len(B_opts), 'data/B/b')
@@ -28,7 +28,7 @@ def simulation_Approximation() :
     plt.legend()
     plt.savefig('plot_B.png')
     plt.show()
-
+    
     #Results of C
     results_C = Approximation.simulation(len(C_opts), 'data/C/c')
     approximation_rate_C = sum([(results_C[i] - C_opts[i])/C_opts[i] for i in range(len(results_C))])/len(results_C)
@@ -56,19 +56,55 @@ def simulation_Approximation() :
     """
 
 def simulation_Genetic_evolution_best_evaluation():
-    results = [(None, None) for _ in range (25)]
-    res = [None for _ in range(25)]
+    number_of_simulation = 100
+    results = [(None, None) for _ in range (number_of_simulation)]
+    res = [None for _ in range(number_of_simulation)]
+    nfile = 2
+    tfile = 'b'
+    path = path_B
+    if tfile == 'c':
+        path = path_C
     #simulation on b1.stp
     for i in range(len(res)):
-        GA.eval_file(1, path_B+'b', results, i)
+        print(f'SIMULATION {i+1}: ')
+        GA.eval_file2(nfile, path+tfile, results, i)
         res[i] = results[i][1]
-        plt.plot(range(len(results[i][1])),res[i], color = '#7DD6CA')
+        #plt.plot(range(len(results[i][1])),res[i], color = '#7DD6CA')
+    average_values = [0 for i in range(len(res[0]))]
+    error_values = [0 for i in range(len(average_values))]
+    for i in range(len(res)):
+        for j in range(len(average_values)):
+            average_values[j] += res[i][j]
+    average_values = np.array(average_values) / number_of_simulation
+    for i in range(len(res)):
+        for j in range(len(error_values)):
+            if (j%10==0):
+                error_values[j] += (res[i][j] - average_values[j])**2
+    for i in range(len(error_values)):
+        error_values[i] = np.sqrt(error_values[i]/ number_of_simulation)
 
-    plt.axhline(B_opts[0], color='red')
-    plt.text(40, 500, 'Optimal solution in red')
-    plt.title('The evolution of the best evaluation for graph b1.stp for 25 simulation')
+    print(average_values[-1])
+    print(error_values[-1])
+ 
+    
+   
+    plt.errorbar(range(len(average_values)),average_values,yerr = error_values, ecolor = "black", linewidth = 1, elinewidth = 1)
+                
+    #for i in range(len(res)):
+     #   print(f'{i+1}eme liste : {min(res[i])}')
+    #plt.scatter(range(number_of_simulation),[res[i][-1] for i in range(25)])
+    opt = 0
+    if tfile == 'b':
+        opt = B_opts[nfile-1]
+    else:
+        opt = C_opts[nfile-1]
+    plt.axhline(opt, color='red', label = "Optimal solution")
+    plt.title(f'The evolution of the best evaluation (in average) \nfor graph {tfile}{nfile}.stp for {number_of_simulation} simulation ')
+    plt.xlabel("steps")
+    plt.ylabel("evaluation")
     plt.legend()
-    plt.savefig('best_evaluation_evolution.png')
+    plt.ylim((opt-5,max(opt*2,average_values[-1]+10)))
+    plt.savefig(f'best_{tfile}{nfile}_evaluation_genetic_ones_init.png')
     plt.show()
 
 if __name__ == '__main__' :
@@ -81,6 +117,6 @@ if __name__ == '__main__' :
 
     print('------------------------------------------------------------------------------------')
     print('processing simulation for Genetic_Algorithm.py')
-    #simulation_Genetic_evolution_best_evaluation()
+    simulation_Genetic_evolution_best_evaluation()
     print('simulation for Genetic_Algorithm.py done')
     print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
