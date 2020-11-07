@@ -9,7 +9,7 @@ import copy as cp
 stein_file = "data/B/b1.stp"
 #stein_file = "data/test.std"
 
-def genetic(graph, terms, nb_iter=100, taille_max_population = 10):
+def genetic(graph, terms, nb_iter=100, taille_max_population = 15):
     """
     This is the main.
     :param graph: the graph for each we search a solution
@@ -57,8 +57,8 @@ def init(graph, terms):
     """
     #sol = Approximation.approx_steiner(graph, terms)
     #return edges_to_bool(sol, [e for e in graph.edges])
-    #return [round(rd.random()) == 1 for _ in range(len(graph.edges))]
-    return [1 for _ in range(len(graph.edges))]
+    return [round(rd.random()) == 1 for _ in range(len(graph.edges))]
+    #return [1 for _ in range(len(graph.edges))]
 
 
 def generation(graph, terms, solutions : dict, nb_changes = 2) :
@@ -74,11 +74,16 @@ def generation(graph, terms, solutions : dict, nb_changes = 2) :
     #new_generation = {}
     new_generation = cp.deepcopy(list(solutions.values()))
 
-    for i in range(nb_changes) :
-        s1 = rd.choice(list(solutions.values()))
-        s2 = rd.choice(list(solutions.values()))
-        new_generation.append([s1[i] if i < len(s1)//2 else s2[i] for i in range(len(s1))])
+    values = cp.deepcopy(list(solutions.values()))
 
+    if len(values) >= 2 :
+        #Alpha couple always makes children
+        new_generation.append([values[0][i] if i < len(values[0])//2 else values[1][i] for i in range(len(values[0]))])
+        new_generation.append([values[1][i] if i < len(values[1])//2 else values[0][i] for i in range(len(values[0]))])
+        #Sometimes others can make children
+        if rd.random() < 1/2 :
+            s1, s2 = rd.choices(values, k=2)
+            new_generation.append([s1[i] if i < len(s1)//2 else s2[i] for i in range(len(s1))])
     for i in range(len(new_generation)) :
         j = rd.choice(range(len(new_generation[i])))
         new_generation[i][j] = not new_generation[i][j]
@@ -164,7 +169,9 @@ def eval_file(number_file : int, path : str, res : list, i : int):
         terms = my_class.terms
         graph = my_class.my_graph
         #print_graph(graph,terms)
-        sol, best_list = genetic(graph,terms)
+        print(f'number of nodes = {len(graph.nodes)}')
+        print(f'number of terminals = {len(terms)}')
+        sol, best_list = genetic(graph,terms, nb_iter=5*len(graph.nodes))
         #print_graph(graph,terms,sol)
         result = Approximation.eval_sol(graph,terms,sol)
     print(f'Processing file number {number_file} ended.\n')

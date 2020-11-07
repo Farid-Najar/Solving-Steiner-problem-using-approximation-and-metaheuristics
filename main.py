@@ -118,9 +118,13 @@ if __name__ == '__main__' :
     print('------------------------------------------------------------------------------------')
     print('processing simulation for Genetic_Algorithm.py')
     print(f'best for c1 = {C_opts[0]}')
-    res = [0]
+    res = [(None, None), None]
     GA.eval_file(0, path_C+'c', res, 0)
-    print(f'{res[0]}')
+    print(f'genetic = {res[0][0]}')
+    Approximation.eval_file(0, path_C+'c', res, 1)
+    print(f'Approximation = {res[1]}')
+    plt.plot(range(len(res[0][1])), res[0][1])
+    plt.show()
     #simulation_Genetic_evolution_best_evaluation()
     print('simulation for Genetic_Algorithm.py done')
     print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
