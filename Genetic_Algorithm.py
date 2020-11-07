@@ -163,7 +163,7 @@ def eval_file(number_file : int, path : str, res : list, i : int):
     """
     print(f"Processing file number {number_file} begins for genetic algorithm.\n")
     my_class = Approximation.MySteinlibInstance()
-    with open(path+f'{number_file+1}.stp') as file :
+    with open(path+f'{number_file}.stp') as file :
         my_parser = Approximation.SteinlibParser(file, my_class)
         my_parser.parse()
         terms = my_class.terms
@@ -176,30 +176,6 @@ def eval_file(number_file : int, path : str, res : list, i : int):
         result = Approximation.eval_sol(graph,terms,sol)
     print(f'Processing file number {number_file} ended.\n')
     res[i] = (result, best_list)
-
-def eval_file2(number_file : int, path : str, res : list, i : int):
-    """
-    Given the file's number, this function finds a solution for the associated graph and store it
-        in the list passed as argument.
-    :param number_file: the file's number
-    :param path: the path to the file
-    :param res: the list in which the result will be stored in
-    :param i: the index of the free place in the list
-    :return: the total weight of the solution
-    """
-    print(f"Processing file number {number_file} begins for genetic algorithm.\n")
-    my_class = Approximation.MySteinlibInstance()
-    with open(path+f'{number_file}.stp') as file :
-        my_parser = Approximation.SteinlibParser(file, my_class)
-        my_parser.parse()
-        terms = my_class.terms
-        graph = my_class.my_graph
-        #print_graph(graph,terms)
-        sol, eval_list = genetic(graph,terms)
-        #print_graph(graph,terms,sol)
-        result = Approximation.eval_sol(graph,terms,sol)
-    print(f'Processing file number {number_file} ended.\n')
-    res[i] = (result, eval_list)
 
 
 def simulation(data_size : int, path : str):
