@@ -28,7 +28,7 @@ def simulation_Approximation() :
     plt.legend()
     plt.savefig('plot_B.png')
     plt.show()
-    
+
     #Results of C
     results_C = Approximation.simulation(len(C_opts), 'data/C/c')
     approximation_rate_C = sum([(results_C[i] - C_opts[i])/C_opts[i] for i in range(len(results_C))])/len(results_C)
@@ -85,13 +85,13 @@ def simulation_Genetic_evolution_best_evaluation():
 
     print(average_values[-1])
     print(error_values[-1])
- 
-    
-   
+
+
+
     plt.errorbar(range(len(average_values)),average_values,yerr = error_values, ecolor = "black", linewidth = 1, elinewidth = 1)
-                
+
     #for i in range(len(res)):
-     #   print(f'{i+1}eme liste : {min(res[i])}')
+    #   print(f'{i+1}eme liste : {min(res[i])}')
     #plt.scatter(range(number_of_simulation),[res[i][-1] for i in range(25)])
     opt = 0
     if tfile == 'b':
@@ -117,6 +117,10 @@ if __name__ == '__main__' :
 
     print('------------------------------------------------------------------------------------')
     print('processing simulation for Genetic_Algorithm.py')
-    simulation_Genetic_evolution_best_evaluation()
+    print(f'best for c1 = {C_opts[0]}')
+    res = [0]
+    GA.eval_file(0, path_C+'c', res, 0)
+    print(f'{res[0]}')
+    #simulation_Genetic_evolution_best_evaluation()
     print('simulation for Genetic_Algorithm.py done')
     print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')

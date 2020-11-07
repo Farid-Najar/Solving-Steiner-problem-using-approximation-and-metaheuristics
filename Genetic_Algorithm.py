@@ -9,7 +9,7 @@ import copy as cp
 stein_file = "data/B/b1.stp"
 #stein_file = "data/test.std"
 
-def genetic(graph, terms, nb_iter=500, taille_max_population = 10):
+def genetic(graph, terms, nb_iter=100, taille_max_population = 10):
     """
     This is the main.
     :param graph: the graph for each we search a solution
@@ -37,45 +37,13 @@ def genetic(graph, terms, nb_iter=500, taille_max_population = 10):
                 if eval_sol < eval_best:
                     best = cp.copy(sol)
                     eval_best = eval_sol
-                    best_list.append(eval_best)
+        best_list.append(eval_best)
         solutions = selection(solutions, taille_max_population)
         i+=1
     return bool_to_edges(best, graph_edges), best_list
 
 
 # 
-def genetic2(graph, terms, nb_iter=500, taille_max_population = 10):
-    """
-    This is the main.
-    :param graph: the graph for each we search a solution
-    :param terms: the list of terminal nodes
-    :param nb_iter: maximum number of iterations
-    :return:
-    """
-    graph_edges = [e for e in graph.edges]
-    best = init(graph,terms)
-    eval_list = []
-    #print(bool_to_edges(best, graph_edges))
-    #print(terms)
-    eval_best = eval_genetic(best, graph, terms)
-    eval_list.append(eval_best)
-    solutions = {eval_best : best}
-    i = 0
-    while(i < nb_iter ):#or TP1.eval_sol(graph, terms, bool_to_edges(best, graph_edges)) == -1):
-        #print(len(solutions))
-        #print(f'{i} = {eval_best}')
-        generation(graph, terms, solutions)
-        #print(f'keys = {solutions.keys()}')
-        #print(f'len(solutions) = {len(solutions)}')
-        for eval_sol, sol in solutions.items() :
-            if sol != best :                #print(f'{i} = {eval_sol}')
-                if eval_sol < eval_best:
-                    best = cp.copy(sol)
-                    eval_best = eval_sol
-        solutions = selection(solutions, taille_max_population)
-        eval_list.append(eval_best)
-        i+=1
-    return bool_to_edges(best, graph_edges), eval_list
 
 def selection(solutions : dict, taille_max_population) :
     solutions = {key : val for key, val in sorted(solutions.items(), key= lambda sol: sol[0])}
@@ -220,7 +188,7 @@ def eval_file2(number_file : int, path : str, res : list, i : int):
         terms = my_class.terms
         graph = my_class.my_graph
         #print_graph(graph,terms)
-        sol, eval_list = genetic2(graph,terms)
+        sol, eval_list = genetic(graph,terms)
         #print_graph(graph,terms,sol)
         result = Approximation.eval_sol(graph,terms,sol)
     print(f'Processing file number {number_file} ended.\n')
