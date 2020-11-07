@@ -20,20 +20,14 @@ def genetic(graph, terms, nb_iter=100, taille_max_population = 15):
     graph_edges = [e for e in graph.edges]
     best = init(graph, terms)
     best_list = []
-    #print(bool_to_edges(best, graph_edges))
-    #print(terms)
     eval_best = eval_genetic(best, graph, terms)
     best_list.append(eval_best)
     solutions = {eval_best : best}
     i = 0
-    while(i < nb_iter ):#or TP1.eval_sol(graph, terms, bool_to_edges(best, graph_edges)) == -1):
-        #print(len(solutions))
-        #print(f'{i} = {eval_best}')
+    while(i < nb_iter ) :
         generation(graph, terms, solutions)
-        #print(f'keys = {solutions.keys()}')
-        #print(f'len(solutions) = {len(solutions)}')
         for eval_sol, sol in solutions.items() :
-            if sol != best :                #print(f'{i} = {eval_sol}')
+            if sol != best :
                 if eval_sol < eval_best:
                     best = cp.copy(sol)
                     eval_best = eval_sol
@@ -42,8 +36,6 @@ def genetic(graph, terms, nb_iter=100, taille_max_population = 15):
         i+=1
     return bool_to_edges(best, graph_edges), best_list
 
-
-# 
 
 def selection(solutions : dict, taille_max_population) :
     solutions = {key : val for key, val in sorted(solutions.items(), key= lambda sol: sol[0])}
@@ -71,19 +63,17 @@ def generation(graph, terms, solutions : dict, nb_changes = 2) :
     :return: it doesn't return anything but updates solutions with new generation
     """
     #print(solutions)
-    #new_generation = {}
-    new_generation = cp.deepcopy(list(solutions.values()))
-
     values = cp.deepcopy(list(solutions.values()))
+    new_generation = cp.deepcopy(values)
 
     if len(values) >= 2 :
         #Alpha couple always makes children
         new_generation.append([values[0][i] if i < len(values[0])//2 else values[1][i] for i in range(len(values[0]))])
         new_generation.append([values[1][i] if i < len(values[1])//2 else values[0][i] for i in range(len(values[0]))])
-        #Sometimes others can make children
-        if rd.random() < 1/2 :
-            s1, s2 = rd.choices(values, k=2)
-            new_generation.append([s1[i] if i < len(s1)//2 else s2[i] for i in range(len(s1))])
+        #others can make children too
+        s1, s2 = rd.choices(values, k=2)
+        new_generation.append([s1[i] if i < len(s1)//2 else s2[i] for i in range(len(s1))])
+
     for i in range(len(new_generation)) :
         j = rd.choice(range(len(new_generation[i])))
         new_generation[i][j] = not new_generation[i][j]
@@ -161,7 +151,7 @@ def eval_file(number_file : int, path : str, res : list, i : int):
     :param i: the index of the free place in the list
     :return: the total weight of the solution
     """
-    print(f"Processing file number {number_file} begins for genetic algorithm.\n")
+    print(f"Processing file {path+str(number_file)}.stp begins for genetic algorithm.\n")
     my_class = Approximation.MySteinlibInstance()
     with open(path+f'{number_file}.stp') as file :
         my_parser = Approximation.SteinlibParser(file, my_class)
@@ -171,10 +161,10 @@ def eval_file(number_file : int, path : str, res : list, i : int):
         #print_graph(graph,terms)
         print(f'number of nodes = {len(graph.nodes)}')
         print(f'number of terminals = {len(terms)}')
-        sol, best_list = genetic(graph,terms, nb_iter=5*len(graph.nodes))
+        sol, best_list = genetic(graph,terms, nb_iter=6*len(graph.nodes))
         #print_graph(graph,terms,sol)
         result = Approximation.eval_sol(graph,terms,sol)
-    print(f'Processing file number {number_file} ended.\n')
+    print(f'Processing file {path+str(number_file)}.stp ended.\n')
     res[i] = (result, best_list)
 
 

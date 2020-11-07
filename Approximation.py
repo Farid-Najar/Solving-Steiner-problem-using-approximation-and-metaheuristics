@@ -122,7 +122,7 @@ def eval_file(number_file, path, res, i):
     :param i: the index of the free place in the list
     :return: the total weight of the solution
     """
-    print(f"Processing file number {number_file} begins.\n")
+    print(f"Processing file number {number_file+1} begins.\n")
     my_class = MySteinlibInstance()
     with open(path+f'{number_file+1}.stp') as file :
         my_parser = SteinlibParser(file, my_class)
@@ -133,7 +133,7 @@ def eval_file(number_file, path, res, i):
         sol = approx_steiner(graph,terms)
         #print_graph(graph,terms,sol)
         result = eval_sol(graph,terms,sol)
-    print(f'Processing file number {number_file} ended.\n')
+    print(f'Processing file number {number_file+1} ended.\n')
     res[i] = result
 
 def simulation(data_size, path):
