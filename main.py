@@ -13,6 +13,7 @@ C_opts = [85,144,754,1079,1579,55,102,509,707,1093,32,46,258,323,556,11,18,113,1
 
 
 def simulation_Approximation() :
+    print("aa")
     #my_class = Approximation.MySteinlibInstance()
     #Results of B
     results_B = Approximation.simulation(len(B_opts), 'data/B/b')
