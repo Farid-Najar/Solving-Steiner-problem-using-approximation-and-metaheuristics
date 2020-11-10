@@ -15,11 +15,12 @@ def recuit(graph : nx.Graph, terms : list, T_init, T_limit, lamb = .99) -> set :
     :param terms: the list of terminal nodes
     :param T_init: the initial temperature
     :param T_limit: the lowest temperature allowed
-    :return: the solution found which is a set of edges
+    :return: the solution found which is a set of edges and the evolution of the best evaluation
     """
     best = init(graph)
     T = T_init
     eval_best = eval_annealing(best, graph, terms)
+    best_list = [eval_best]
     m = 0
     #sol = init(graph)
     while(T>T_limit):
@@ -29,19 +30,20 @@ def recuit(graph : nx.Graph, terms : list, T_init, T_limit, lamb = .99) -> set :
             prob = 1
         else :
             prob = exp((eval_best - eval_sol)/T)
-            print(f'prob = {prob}')
+            #print(f'prob = {prob}')
         rand = rd.random()
         if rand <= prob :
             best = cp.deepcopy(sol)
             eval_best = eval_sol
-            print('best changed !!!!!!!!!!!!!!!!!')
-        print(f'eval_sol = {eval_sol}')
-        print(f'eval_best = {eval_best}')
+            #print('best changed !!!!!!!!!!!!!!!!!')
+        #print(f'eval_sol = {eval_sol}')
+        #print(f'eval_best = {eval_best}')
         T *= lamb
         m += 1
-    print(f'm = {m}')
-    print(eval_best)
-    return Genetic_Algorithm.bool_to_edges(best, [e for e in graph.edges])
+        best_list.append(eval_best)
+    #print(f'm = {m}')
+    #print(eval_best)
+    return Genetic_Algorithm.bool_to_edges(best, [e for e in graph.edges]), best_list
 
 def init(graph):
     """
@@ -61,7 +63,7 @@ def eval_annealing(sol, graph, terms : list, malus = 500):
     :param graph: the graph for each we search a solution
     :param terms: the list of terminal nodes
     :param malus: the coefficient that we use to penalize bad solutions
-    :return: the evaluation of the solution which is an integer
+    :return: the evaluation of the solution that is an integer
     """
     graph_sol = nx.Graph()
     nb_absent_terms = len(terms)
@@ -101,6 +103,50 @@ def rand_neighbor(solution : list, nb_changes = 1) :
         i = rd.choice(range(len(new_solution)))
         new_solution[i] = not new_solution[i]
     return new_solution
+
+
+def eval_file(number_file : int, path : str, res : list, i : int):
+    """
+    Given the file_s number, this function finds a solution for the associated graph and store it in the list passed as argument
+    :param number_file : the file's number
+    :param path : the path to the file
+    :param res : the list in which the result will be stored in
+    :param i : the index of the free place in the list
+    :return : the total weight of the solution
+    """
+
+    print(f'Processing file {path+str(number_file)}.stp begins for recuit algorithm.\n')
+    my_class = Approximation.MySteinlibInstance()
+    with open(path+f'{number_file}.stp') as file:
+        my_parser = Approximation.SteinlibParser(file, my_class)
+        my_parser.parse()
+        terms = my_class.terms
+        graph = my_class.my_graph
+        sol, best_list = recuit(graph,terms,20000,1,0.999)
+        result = Approximation.eval_sol(graph,terms,sol)
+    print(f'Processing file {path+str(number_file)}.stp ended.\n')
+    res[i] = (result,best_list)
+
+
+def simulation(data_size : int, nbr_file : int, path : str):
+    """
+    this function does the simulation with our data using parallel operations
+    :param data_size : the number of simulations
+    :param nbr_file : which file we are evaluating
+    :param path : the path to the file
+    :return : results of the simulation
+    """
+
+    res = [0 for _ in range(data_size)]
+    threads = []
+    for i in range(data_size):
+        threads.append(Thread(target=eval_file, args=(nbr_file,path,res,i)))
+        threads[i].start()
+
+    for i in range(data_size):
+        threads[i].join()
+    print(res)
+    return res
 
 if __name__ == '__main__' :
     #stein_file = 'data/test.std'
