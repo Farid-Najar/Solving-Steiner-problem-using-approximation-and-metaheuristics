@@ -7,7 +7,7 @@ import copy as cp
 from numpy import exp
 import Genetic_Algorithm
 
-def recuit(graph : nx.Graph, terms : list, T_init, T_limit, lamb = .99) -> set :
+def recuit(graph : nx.Graph, terms : list, T_init, T_limit = 25, lamb = .99) -> (set, list) :
     """
     This function finds a solution for the steiner problem
         using annealing algorithm
@@ -21,7 +21,9 @@ def recuit(graph : nx.Graph, terms : list, T_init, T_limit, lamb = .99) -> set :
     T = T_init
     eval_best = eval_annealing(best, graph, terms)
     m = 0
+    list_best = [eval_best]
     #sol = init(graph)
+    flag100 = True
     while(T>T_limit):
         sol = rand_neighbor(best)#, nb_changes=int(T)%len(best))
         eval_sol = eval_annealing(sol, graph, terms)
@@ -29,19 +31,70 @@ def recuit(graph : nx.Graph, terms : list, T_init, T_limit, lamb = .99) -> set :
             prob = 1
         else :
             prob = exp((eval_best - eval_sol)/T)
-            print(f'prob = {prob}')
+            #print(f'prob = {prob}')
         rand = rd.random()
         if rand <= prob :
             best = cp.deepcopy(sol)
             eval_best = eval_sol
-            print('best changed !!!!!!!!!!!!!!!!!')
-        print(f'eval_sol = {eval_sol}')
-        print(f'eval_best = {eval_best}')
+        list_best.append(eval_best)
+            #print('best changed !!!!!!!!!!!!!!!!!')
+        #print(f'eval_sol = {eval_sol}')
+        #print(f'eval_best = {eval_best}')
         T *= lamb
         m += 1
+        if(flag100 and T<=100):
+            flag100 = False
+            lamb = .9999
+        print(T)
     print(f'm = {m}')
     print(eval_best)
-    return Genetic_Algorithm.bool_to_edges(best, [e for e in graph.edges])
+    return Genetic_Algorithm.bool_to_edges(best, [e for e in graph.edges]), list_best
+
+def recuit_multiple(graph : nx.Graph, terms : list, T_init, T_limit = 25, nb_researchers = 2, lamb = .99) -> (set, list) :
+    """
+    This function finds a solution for the steiner problem
+        using annealing algorithm with multiple researchers
+    :param graph: the graph for each we search a solution
+    :param terms: the list of terminal nodes
+    :param nb_researchers: the number of researchers for the best solution
+    :param T_init: the initial temperature
+    :param T_limit: the lowest temperature allowed
+    :return: the solution found which is a set of edges
+    """
+    bests = [init(graph) for _ in range(nb_researchers)]
+    T = T_init
+    evals_best = [eval_annealing(bests[i], graph, terms) for i in range(nb_researchers)]
+    m = 0
+    list_best = [min(evals_best)]
+    #sol = init(graph)
+    flag100 = True
+    while(T>T_limit):
+        solutions = [rand_neighbor(bests[i]) for i in range(nb_researchers)]#, nb_changes=int(T)%len(best))
+        evals_sol = [eval_annealing(solutions[i], graph, terms) for i in range(nb_researchers)]
+        for i in range(nb_researchers):
+            if evals_sol[i] <= evals_best[i] :
+                prob = 1
+            else :
+                prob = exp((evals_best[i] - evals_sol[i])/T)
+                #print(f'prob = {prob}')
+            rand = rd.random()
+            if rand <= prob :
+                bests[i] = cp.deepcopy(solutions[i])
+                evals_best[i] = evals_sol[i]
+        list_best.append(min(evals_best))
+        #print('best changed !!!!!!!!!!!!!!!!!')
+        #print(f'eval_sol = {eval_sol}')
+        #print(f'eval_best = {eval_best}')
+        T *= lamb
+        m += 1
+        if(flag100 and T<=100):
+            flag100 = False
+            lamb = .9999
+        print(T)
+    print(f'm = {m}')
+    index, eval_best = min(((idx, ev) for (idx, ev) in enumerate(evals_best)), key=lambda x : x[1])
+    print(eval_best)
+    return Genetic_Algorithm.bool_to_edges(bests[index], [e for e in graph.edges]), list_best
 
 def init(graph):
     """
@@ -103,8 +156,9 @@ def rand_neighbor(solution : list, nb_changes = 1) :
     return new_solution
 
 if __name__ == '__main__' :
+    import matplotlib.pyplot as plt
     #stein_file = 'data/test.std'
-    stein_file = 'data/B/b1.stp'
+    stein_file = 'data/C/c1.stp'
     my_class = Approximation.MySteinlibInstance()
     with open(stein_file) as my_file:
         my_parser = Approximation.SteinlibParser(my_file, my_class)
@@ -112,7 +166,12 @@ if __name__ == '__main__' :
         terms = my_class.terms
         graph = my_class.my_graph
         #Approximation.print_graph(graph,terms)
-        sol=recuit(graph,terms, 20000, 1)
-        Approximation.print_graph(graph,terms,sol)
+        sol, best_list=recuit(graph,terms, 2000, 1)
+        sol_multiple, best_list_multiple = recuit_multiple(graph, terms, 2000, 1, nb_researchers=5)
+        plt.plot(range(len(best_list)), best_list)
+        plt.plot(range(len(best_list_multiple)), best_list_multiple, color = 'orange')
+        plt.show()
+        #Approximation.print_graph(graph,terms,sol)
         print(f'len(nodes) = {len(graph.nodes)}')
-        print(Approximation.eval_sol(graph,terms,sol))
+        print(f'simple = {Approximation.eval_sol(graph, terms, sol)}')
+        print(f'multiple = {Approximation.eval_sol(graph,terms,sol_multiple)}')
