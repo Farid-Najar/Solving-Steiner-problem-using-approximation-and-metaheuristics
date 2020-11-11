@@ -37,14 +37,12 @@ def recuit(graph : nx.Graph, terms : list, T_init, T_limit, lamb = .99) :
         list_best.append(eval_best)
         T *= lamb
         m += 1
+        '''
         if(flag100 and T<=100):
             flag100 = False
-            lamb = .9999
+            lamb = .999
         print(T)
-        if(flag100 and T<=100):
-            flag100 = False
-            lamb = .9999
-        print(T)
+        '''
     print(f'm = {m}')
     print(eval_best)
     return Genetic_Algorithm.bool_to_edges(best, [e for e in graph.edges]), list_best
@@ -85,7 +83,7 @@ def recuit_multiple(graph : nx.Graph, terms : list, T_init, T_limit = 25, nb_res
         m += 1
         if(flag100 and T<=100):
             flag100 = False
-            lamb = .9999
+            lamb = .999
         print(T)
     print(f'm = {m}')
     index, eval_best = min(((idx, ev) for (idx, ev) in enumerate(evals_best)), key=lambda x : x[1])
@@ -198,7 +196,7 @@ def simulation(data_size : int, nbr_file : int, path : str):
 if __name__ == '__main__' :
     import matplotlib.pyplot as plt
     #stein_file = 'data/test.std'
-    stein_file = 'data/C/c1.stp'
+    stein_file = 'data/B/b1.stp'
     my_class = Approximation.MySteinlibInstance()
     with open(stein_file) as my_file:
         my_parser = Approximation.SteinlibParser(my_file, my_class)
