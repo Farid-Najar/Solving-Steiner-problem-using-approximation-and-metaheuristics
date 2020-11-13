@@ -173,25 +173,6 @@ def eval_file(number_file : int, path : str, res : list, i : int):
     res[i] = (result,best_list)
 
 
-def simulation(data_size : int, nbr_file : int, path : str):
-    """
-    this function does the simulation with our data using parallel operations
-    :param data_size : the number of simulations
-    :param nbr_file : which file we are evaluating
-    :param path : the path to the file
-    :return : results of the simulation
-    """
-
-    res = [0 for _ in range(data_size)]
-    threads = []
-    for i in range(data_size):
-        threads.append(Thread(target=eval_file, args=(nbr_file,path,res,i)))
-        threads[i].start()
-
-    for i in range(data_size):
-        threads[i].join()
-    print(res)
-    return res
 
 if __name__ == '__main__' :
     import matplotlib.pyplot as plt
