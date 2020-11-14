@@ -122,8 +122,8 @@ def plotEvaluation(results,nbr_file : int,path : str, xlabel = "", ylabel = "",t
         plt.ylabel("evaluation")
         plt.legend()
         plt.ylim((opt-5,max(opt*2,average_values[-1]+10)))
-    plt.savefig(f'best_{tfile}{nbr_file}_evaluation_{target_name}.png')
     plt.axhline(opt, color='red', label = "Optimal solution")
+    plt.savefig(f'best_{tfile}{nbr_file}_evaluation_{target_name}.png')
     plt.show()
 
 def simulation_genetic(nbr_file : int, path : str, number_of_simulation = 100, target_name = "genetic"):
@@ -164,7 +164,12 @@ if __name__ == '__main__' :
 
     #number_of_simulation = 100
     #simulation_genetic(nfile,path,target_name = "genetic max_pop 5")
-    simulation_recuit(nfile,path,target_name = "recuit multiple 2000 10")
+    plotEvaluation([simulation(100,nfile,path,AA.eval_file)
+                    ,simulation(100,nfile,path,AA.eval_file_m)]
+                   ,nfile
+                   ,path, target_name = "recuit diff multiple simple")
+    
+    #simulation_recuit(nfile,path,target_name = "recuit multiple 2000 10")
     #plotEvaluation([simulation(10,nfile,path,AA.eval_file),
                     #simulation(10,nfile,path,GA.eval_file)]
                   # ,nfile

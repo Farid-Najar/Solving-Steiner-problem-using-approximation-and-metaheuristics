@@ -167,6 +167,29 @@ def eval_file(number_file : int, path : str, res : list, i : int):
         my_parser.parse()
         terms = my_class.terms
         graph = my_class.my_graph
+        sol, best_list = recuit(graph,terms,2000,1,0.99)
+        #sol, best_list = recuit_multiple(graph,terms,2000,1,lamb = 0.99, nb_researchers = 5)
+        result = Approximation.eval_sol(graph,terms,sol)
+    print(f'Processing file {path+str(number_file)}.stp ended.\n')
+    res[i] = (result,best_list)
+
+def eval_file_m(number_file : int, path : str, res : list, i : int):
+    """
+    Given the file_s number, this function finds a solution for the associated graph and store it in the list passed as argument
+    :param number_file : the file's number
+    :param path : the path to the file
+    :param res : the list in which the result will be stored in
+    :param i : the index of the free place in the list
+    :return : the total weight of the solution
+    """
+
+    print(f'Processing file {path+str(number_file)}.stp begins for recuit algorithm.\n')
+    my_class = Approximation.MySteinlibInstance()
+    with open(path+f'{number_file}.stp') as file:
+        my_parser = Approximation.SteinlibParser(file, my_class)
+        my_parser.parse()
+        terms = my_class.terms
+        graph = my_class.my_graph
         #sol, best_list = recuit(graph,terms,20000,1,0.99)
         sol, best_list = recuit_multiple(graph,terms,2000,1,lamb = 0.99, nb_researchers = 5)
         result = Approximation.eval_sol(graph,terms,sol)
