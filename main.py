@@ -80,18 +80,20 @@ def simulation(data_size : int,nbr_file : int, path : str, target):
 
 
 
-def plotEvaluation(results,nbr_file : int,path : str, xlabel = "", ylabel = "",target_name = ""):
+def plotEvaluation(results,nbr_file : int,path : str, labels = [""],target_name = ""):
     """
     This function plot the results of the evaluation 
     :param results : the tab of the results of the evaluations
     :param nbr_file : wich file we are evaluating
     :param path : the path to the file
-    :params xlabel,ylabel : labels of the plot
+    :params labels : labels of the plots
     :param target_name : name of the target evaluation function
     :return : none
     """
-    for res in results:
-        data = [np.array(p[1]) for p in res]
+    fig,ax = plt.subplots(1,1)
+    ax.set_yscale("log")
+    for res in range(len(results)):
+        data = [np.array(p[1]) for p in results[res]]
         number_of_simulation = len(data)
 
         average_values = np.zeros(len(data[0]))
@@ -114,43 +116,50 @@ def plotEvaluation(results,nbr_file : int,path : str, xlabel = "", ylabel = "",t
             opt = C_opts[nbr_file-1]
             tfile = 'c'
     
-
-        plt.errorbar(range(len(average_values)),average_values,yerr = error_values, ecolor = "black", linewidth = 1, elinewidth = 1)
+        
+        ax.errorbar(range(len(average_values)),average_values,yerr = error_values, ecolor = "black", linewidth = 1, elinewidth = 1, label = labels[res])
             
-        plt.title(f'{target_name} : The evolution of the best evaluation (in average) \nfor graph {tfile}{nbr_file}.stp for {number_of_simulation} simulations')
-        plt.xlabel("steps")
-        plt.ylabel("evaluation")
-        plt.legend()
-        plt.ylim((opt-5,max(opt*2,average_values[-1]+10)))
-    plt.axhline(opt, color='red', label = "Optimal solution")
+        
+        #ax.ylim((opt-5,max(opt*2,average_values[-1]+10)))
+    plt.title(f'{target_name} : The evolution of the best evaluation (in average) \nfor graph {tfile}{nbr_file}.stp for {number_of_simulation} simulations')
+    plt.xlabel("steps")
+    plt.ylabel("evaluation")
+    ax.legend()
+    ax.axhline(opt, color='red', label = "Optimal solution")
     plt.savefig(f'best_{tfile}{nbr_file}_evaluation_{target_name}.png')
     plt.show()
 
-def simulation_genetic(nbr_file : int, path : str, number_of_simulation = 100, target_name = "genetic"):
+def simulation_genetic(nbr_file : int, path : str, number_of_simulation = 100, target_name = "genetic", label = ""):
     """
     this function does the simulation for the genetic algorithm
     :param nbr_file: wich file we are evaluating
     :param path: the path to the file
     :param number_of_simulation: how many simulations we do
-    :param target_name : the name of the target functio
+    :param target_name : the name of the target function
+    :param label : label of the curve
     :return: none
     """
     plotEvaluation([simulation(number_of_simulation,nbr_file,path,GA.eval_file)]
                    ,nbr_file
-                   ,path, target_name = target_name)
+                   ,path
+                   ,labels = [label]
+                   ,target_name = target_name)
 
-def simulation_recuit(nbr_file : int, path : str,number_of_simulation = 100, target_name = "recuit"):
+def simulation_recuit(nbr_file : int, path : str,number_of_simulation = 100, target_name = "recuit", label = ""):
     """
     this function does the simulation for the annealing algorithm
     :param nbr_file: wich file we are evaluating
     :param path: the path to the file
     :param number_of_simulation: how many simulations we do
     :param target_name : the name of the target function
+    :param : label of the curve
     :return: none
     """
     plotEvaluation([simulation(number_of_simulation,nbr_file,path,AA.eval_file)]
                    ,nbr_file
-                   ,path, target_name = target_name)
+                   ,path
+                   ,labels = [label]
+                   ,target_name = target_name)
 
 
 
@@ -162,12 +171,15 @@ if __name__ == '__main__' :
     nfile = 2
     path = "data/B/b"
 
+    simulation_genetic(nfile,path,number_of_simulation = 10,target_name = "TEST", label = "LABEL")
+
+    
     #number_of_simulation = 100
     #simulation_genetic(nfile,path,target_name = "genetic max_pop 5")
-    plotEvaluation([simulation(100,nfile,path,AA.eval_file)
-                    ,simulation(100,nfile,path,AA.eval_file_m)]
-                   ,nfile
-                   ,path, target_name = "recuit diff multiple simple")
+    #plotEvaluation([simulation(100,nfile,path,AA.eval_file)
+     #               ,simulation(100,nfile,path,AA.eval_file_m)]
+      #             ,nfile
+       #            ,path, target_name = "recuit diff multiple simple")
     
     #simulation_recuit(nfile,path,target_name = "recuit multiple 2000 10")
     #plotEvaluation([simulation(10,nfile,path,AA.eval_file),
