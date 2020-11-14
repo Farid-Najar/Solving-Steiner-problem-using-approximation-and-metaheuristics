@@ -40,7 +40,7 @@
 	\section{Contexte}
 	Imaginons que nous avons un réseau avec une source et plusieurs destinations. Nous voulons avoir des chemins depuis la source vers les destinations sans être coupé par d'autres chemins. Dit autrement, nous voulons un graphe sans cycles, i.e. un arbre, en partant de la source et en ayant les destinations qu'on veut visiter. De plus, pour aller d'un point à l'autre faut payer un coût. Le but est de trouver l'arbre qui vérifie les conditions énoncées de coût minimal.
 	\section{Modélisation}
-	Nous pouvons modéliser le réseau par un graphe connexe $G = (V, E)$ avec $V$ l'ensemble des sommets et $E$ l'ensembles des arrêtes. On introduit aussi une fonction $w:E\rightarrow \mathbb{N}$ qui à chaque arrête $e\in E$ attribut un poids $w(e)$. Soit $T$ l'ensemble des "terminaux" qui sont tout simplement les destinations que nous avons énoncé. On remarque que la source peut être considérée comme un terminal. En effet, comme notre solution est un arbre, on peut le représenter comme on veut en prenant un nœud quelconque comme source. Alors notre problème est de trouver un arbre $A = (V', E')$ (graphe connexe sans cycles), tel que, $T\subseteq V'$ et on veut minimiser $\sum_{e\in E'}w(e)$.
+	Nous pouvons modéliser le réseau par un graphe connexe $G = (V, E)$ avec $V$ l'ensemble des sommets et $E$ l'ensembles des arrêtes. On introduit aussi une fonction $w:E\rightarrow \mathbb{N}$ qui à chaque arrête $e\in E$ attribut un poids $w(e)$. Soit $T$ l'ensemble des "terminaux" qui sont tout simplement les destinations que nous avons énoncé. On remarque que la source peut être considérée comme un terminal. En effet, comme notre solution est un arbre, on peut le représenter comme on veut en prenant un nœud quelconque comme source. Alors notre problème est de trouver un arbre $A = (V', E')$ (graphe connexe sans cycles), tel que, $T\subseteq V'$ et on veut minimiser $\sum_{e\in E'}w(e)$. On représente les solutions comme une liste de 0 ou 1 de taille $|E|$. En numérotant les arrêtes, pour une solution $s$, $s_i$ nous dit si le $i$-ème arrête est dans l'arbre ou pas (1 oui, 0 non).
 	\section{Complexité}
 	
 	\section{Algorithme d'approximation et taux d'approximation}
@@ -60,19 +60,67 @@
 	\subsection{Taux d'approximation} 
 	
 	\section{Méta-heuristiques}
-	Dans cette section, nous allons voir deux algorithmes, de la famille des algorithmes méta-heuristiques, qui sont probabilistes et donnent des résultats différents à chaque exécution. L'intérêt de ces algorithmes est dans leur flexibilité. En effet, contrairement au cas d'approximation, nous n'avons pas besoin de chercher une manière spécifique de trouver la meilleure solution. Dans de nombreux cas, on n'a toujours pas trouver un algorithme d'approximation et dans tant d'autres, les taux d'approximations sont assez élevés. Pour utiliser mes méta-heuristiques, il suffit d'adapter les algorithmes au problème et utiliser le plus pertinent selon les cas.
+	L'approximation est une bonne façon de trouver les solutions, mais, il n'est pas évident de trouver un algorithme d'approximation. Dans cette section, nous allons voir deux algorithmes, de la famille des algorithmes méta-heuristiques, qui sont probabilistes et donnent des résultats différents à chaque exécution. L'intérêt de ces algorithmes est dans leur flexibilité et la facilité d'implémentation. En effet, contrairement au cas d'approximation, nous n'avons pas besoin de chercher une manière spécifique de trouver la meilleure solution. Dans de nombreux cas, on n'a toujours pas trouver un algorithme d'approximation et dans tant d'autres, les taux d'approximations sont assez élevés. Pour utiliser mes méta-heuristiques, il suffit d'adapter les algorithmes au problème et utiliser le plus pertinent selon les cas.\\
 	
-	Les méta-heuristiques partent d'une solution aléatoire et cherchent pour de nouvelles solutions en transformant la solution de base. Ensuite, elles évaluent ces solutions et gardent la ou les meilleures. Elles répé
+	Les méta-heuristiques partent d'une solution aléatoire et cherchent de nouvelles solutions en transformant la solution de base. Ensuite, elles évaluent ces solutions et gardent la ou les meilleures. Elles répètent cette opération un nombre de fois qu'il faut déterminer. Finalement, elles rendent la meilleure qu'ils ont trouvé.\\
 	
-	Pour notre problème, nous avons choisi deux algorithmes que nous avons jugé pertinents pour ce dernier. Deux algorithmes qui viennent de deux familles différentes de ce genre. Le premier fait partie de la famille \textbf{méta-heuristiques à parcours} et \textbf{méta-heuristiques à population}.
+	Pour notre problème, nous avons choisi deux algorithmes que nous avons jugé pertinents pour ce dernier. Deux algorithmes qui viennent de deux familles différentes de ce genre. Le premier fait partie de la famille \textbf{méta-heuristiques à parcours} et \textbf{méta-heuristiques à population}. Ces deux algorithmes, comme la plupart des algorithmes de ce genre, se sont inspirés des phénomènes naturels.
 	
 	\subsection{Algorithme recuit}
+	L'algorithme recuit, qui fait parti des méta-heuristiques à parcours, s'inspire du recuit des métaux afin de modifier les caractéristiques de ces derniers. Le procédé consiste à chauffer le métal à une température précise et ensuite le refroidir d'une manière contrôlé. Cela nous aide à contourner certaines contraintes physiques.\\
+	
+	Dans notre cas, ce procédé peut nous aider à ne pas rester coincé dans un minimum/maximum local. En effet, nous parcourrons l'espace des solutions afin de trouver le plus petit coût. À cause de ça, si on fait un parcours normal comme "hill climbing", on peut se trouver proche d'un minimum local qui n'est pas global et ainsi, ne pas avoir des perfomances souhaitées. Cependant, il faut faire attention aux températures très élevées, car, elles peuvent nous éloigner de la solution optimale.\\
+	
+	Nous devons aussi savoir contrôler le refroidissement. Un refroidissement très rapide peut causer des résultats loin de la solution optimale, et un refroidissement très lent peut prolonger le comportement chaotiques des températures élevées et causer un temps de calcule très élevé.
 	
 	\subsubsection{Recuit simple}
+	Dans le recuit simple, on a un seul "chercheur" pour la solution. 
+	L'algorithme initial pour un refroidissement exponentiel de paramètre $\lambda$ et une température initiale $T_{init}$ et une température limite $T_{limit}$ est :\\
+	
+	\begin{itemize}
+		\item[1.] On part d'une solution aléatoire et on la nomme $best$. On pose $T = T_{init}$
+		\item[2.] On génère un voisin aléatoire nommé $voisin$.
+		\item[3.] On évalue les deux
+		\item[4.] Si le voisin a une meilleure évaluation, ici meilleure c'est plus petit, on pose $prob = 1$ et on va à la ligne 6.
+		\item[5.] Sinon, on pose $prob = e^{-\frac{(evaluation(voisin) - evaluation(best))}{T}}$
+		\item[6.] On tire un nombre aléatoire nommé $rand$ entre 0 et 1 suivant la loi uniforme.
+		\item[7.] Si $rand < prob$ alors $best = voisin$
+		\item[8.] T = $\lambda T$
+		\item[9.] Si $T<T_{limit}$ on part à la ligne 2 sinon on arrête et on renvoie $best$\\
+	\end{itemize}
+
+	Notez que dans le terme de l'exponentielle, on a aussi la constante de Boltzmann au dénominateur qui est égal à 0 dans notre algorithme. 
+	Remarquons que la température a une influence direct sur $prob$ et si on a une température élevé, $prob$ va être proche de 1, donc, on a une forte probabilité de changer $best$ même si l'évaluation de $voisin$ n'est pas meilleure. Cela explique les fluctuations à températures élevée et la nécessité de décroître la température rapidement vers un niveau stable. C'est pour cette raison que nous avons choisi une décroissance exponentielle de la température qui nous assure ce dernier critère, et en même temps, laisse un peu de temps à l'algorithme pour converger vers le minimum le plus proche.\\
+	
+	Pour générer un voisin aléatoire, nous prenons une indice aléatoirement et on change $i$-ème valeur, de sorte que, si c'est 0, on met 1, sinon, on met 0.
+	
+	Pour l'algorithme initial, nous avons pris $\lambda = 0.99$. Cependant, afin de permettre une convergence vers le minimum, dans la version finale nous changeons $\lambda$ à partir d'une température $T_{seuil}$. Grâce à ce changement, on a un meilleur résultat, mais, on rallonge le temps de calcul. Voici la version finale :\\
+	\begin{itemize}
+		\item[1.] On part d'une solution aléatoire et on la nomme $best$. On pose $T = T_{init}$
+		\item[2.] On génère un voisin aléatoire nommé $voisin$.
+		\item[3.] On évalue les deux
+		\item[4.] Si le voisin a une meilleure évaluation, ici meilleure c'est plus petit, on pose $prob = 1$ et on va à la ligne 6.
+		\item[5.] Sinon, on pose $prob = e^{-\frac{(evaluation(voisin) - evaluation(best))}{T}}$
+		\item[6.] On tire un nombre aléatoire nommé $rand$ entre 0 et 1 suivant la loi uniforme.
+		\item[7.] Si $rand < prob$ alors $best = voisin$
+		\item[8.] T = $\lambda T$
+		\item[9.] Si $T<T_{seuil}$ alors $\lambda = \lambda_{alternative}$
+		\item[10.] Si $T<T_{limit}$ on part à la ligne 2 sinon on arrête et on renvoie $best$
+	\end{itemize}
 	
 	\subsubsection{Recuit multiple}
+	Seul on va plus vite, ensemble, on va plus loin ! Cette expression résume bien l'intérêt d'avoir plusieurs chercheurs. Avec un temps de calcul un peu plus long, on peut avoir des résultats plus intéressants que recuit simple. Pour cela, au lieu de partir d'une solution aléatoire, on part de $n$ solutions aléatoires qu'on met dans une liste nommée $bests$.\\
+	
+	\begin{itemize}
+		\item[1.] On part de $n$ solutions aléatoires et on la nomme $bests$. On pose $T = T_{init}$
+		\item[2.] On fait les étapes 2 à 9 de recuit simple pour chaque membre de $bests$
+		\item[3.] Si $T<T_{limit}$ on part à la ligne 2 sinon on arrête et on renvoie la solution qui a la meilleure évaluation parmi les membres de $bests$.\\
+	\end{itemize}
+	
+	Nous allons voir dans la section résultats la différences entre ces deux versions.
 	
 	\subsection{Algorithme génétique}
+	Faisant partie de la famille des méta-heuristiques à populations, il s'inspire aussi d'un phénomène naturel, l'évolution et la sélection naturelle.
 	
 	\section{Résultats et performances}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
