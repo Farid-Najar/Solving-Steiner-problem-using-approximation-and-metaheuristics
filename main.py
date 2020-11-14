@@ -78,73 +78,79 @@ def simulation(data_size : int,nbr_file : int, path : str, target):
 
     return res
 
-def plotEvaluation(res,nbr_file : int,path : str, title = "plot", xlabel = "", ylabel = ""):
+
+
+def plotEvaluation(results,nbr_file : int,path : str, xlabel = "", ylabel = "",target_name = ""):
     """
     This function plot the results of the evaluation 
-    :param res : the results of the evaluation
+    :param results : the tab of the results of the evaluations
     :param nbr_file : wich file we are evaluating
     :param path : the path to the file
-    :param title : the title of the plot
     :params xlabel,ylabel : labels of the plot
+    :param target_name : name of the target evaluation function
     :return : none
     """
-    data = [np.array(p[1]) for p in res]
-    number_of_simulation = len(data)
+    for res in results:
+        data = [np.array(p[1]) for p in res]
+        number_of_simulation = len(data)
 
-    average_values = np.zeros(len(data[0]))
-    for d in data:
-        average_values =average_values + d
-    average_values = np.array(average_values) / number_of_simulation
+        average_values = np.zeros(len(data[0]))
+        for d in data:
+            average_values =average_values + d
+        average_values = np.array(average_values) / number_of_simulation
     
-    error_values = [0 for i in range(len(average_values))]
-    for j in range(len(error_values)):
-        if j%10==0 :
-            for i in range(len(data)):
-                error_values[j] += (data[i][j] - average_values[j])**2
-            error_values[j] = np.sqrt(error_values[j]/number_of_simulation)
-    opt = 0
-    tfile = ''
-    if path == 'data/B/b':
-        opt = B_opts[nbr_file-1]
-        tfile = 'b'
-    else:
-        opt = C_opts[nbr_file-1]
-        tfile = 'c'
+        error_values = [0 for i in range(len(average_values))]
+        for j in range(len(error_values)):
+            if j%10==0 :
+                for i in range(len(data)):
+                    error_values[j] += (data[i][j] - average_values[j])**2
+                error_values[j] = np.sqrt(error_values[j]/number_of_simulation)
+        opt = 0
+        tfile = ''
+        if path == 'data/B/b':
+            opt = B_opts[nbr_file-1]
+            tfile = 'b'
+        else:
+            opt = C_opts[nbr_file-1]
+            tfile = 'c'
     
 
-    plt.errorbar(range(len(average_values)),average_values,yerr = error_values, ecolor = "black", linewidth = 1, elinewidth = 1)
+        plt.errorbar(range(len(average_values)),average_values,yerr = error_values, ecolor = "black", linewidth = 1, elinewidth = 1)
+            
+        plt.title(f'{target_name} : The evolution of the best evaluation (in average) \nfor graph {tfile}{nbr_file}.stp for {number_of_simulation} simulations')
+        plt.xlabel("steps")
+        plt.ylabel("evaluation")
+        plt.legend()
+        plt.ylim((opt-5,max(opt*2,average_values[-1]+10)))
+    plt.savefig(f'best_{tfile}{nbr_file}_evaluation_{target_name}.png')
     plt.axhline(opt, color='red', label = "Optimal solution")
-    plt.title(f'The evolution of the best evaluation (in average) \nfor graph {tfile}{nbr_file}.stp for {number_of_simulation} simulation ')
-    plt.xlabel("steps")
-    plt.ylabel("evaluation")
-    plt.legend()
-    plt.ylim((opt-5,max(opt*2,average_values[-1]+10)))
-    plt.savefig(f'best_{tfile}{nbr_file}_evaluation_genetic_ones_init.png')
     plt.show()
 
-def simulation_genetic(nbr_file : int, path : str, number_of_simulation = 100):
+def simulation_genetic(nbr_file : int, path : str, number_of_simulation = 100, target_name = "genetic"):
     """
     this function does the simulation for the genetic algorithm
     :param nbr_file: wich file we are evaluating
     :param path: the path to the file
     :param number_of_simulation: how many simulations we do
+    :param target_name : the name of the target functio
     :return: none
     """
-    plotEvaluation(simulation(number_of_simulation,nbr_file,path,GA.eval_file)
+    plotEvaluation([simulation(number_of_simulation,nbr_file,path,GA.eval_file)]
                    ,nbr_file
-                   ,path)
+                   ,path, target_name = target_name)
 
-def simulation_recuit(nbr_file : int, path : str,number_of_simulation = 100):
+def simulation_recuit(nbr_file : int, path : str,number_of_simulation = 100, target_name = "recuit"):
     """
     this function does the simulation for the annealing algorithm
     :param nbr_file: wich file we are evaluating
     :param path: the path to the file
     :param number_of_simulation: how many simulations we do
+    :param target_name : the name of the target function
     :return: none
     """
-    plotEvaluation(simulation(number_of_simulation,nbr_file,path,AA.eval_file)
+    plotEvaluation([simulation(number_of_simulation,nbr_file,path,AA.eval_file)]
                    ,nbr_file
-                   ,path)
+                   ,path, target_name = target_name)
 
 
 
@@ -152,14 +158,25 @@ def simulation_recuit(nbr_file : int, path : str,number_of_simulation = 100):
 if __name__ == '__main__' :
     print('Simulation begins')
     print('------------------------------------------------------------------------------------')
-    print('processing simulation for Approximation.py')
-    #simulation_Approximation()
-    print('simulation for Approximation.py done')
-    print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
 
-    print('------------------------------------------------------------------------------------')
-    print('processing simulation for Genetic_Algorithm.py')
-    print(f'best for c1 = {C_opts[0]}')
+    nfile = 2
+    path = "data/B/b"
+
+    #number_of_simulation = 100
+    #simulation_genetic(nfile,path,target_name = "genetic max_pop 5")
+    simulation_recuit(nfile,path,target_name = "recuit multiple 2000 10")
+    #plotEvaluation([simulation(10,nfile,path,AA.eval_file),
+                    #simulation(10,nfile,path,GA.eval_file)]
+                  # ,nfile
+                   #,path, target_name = "g against r")
+    #print('processing simulation for Approximation.py')
+    #simulation_Approximation()
+    #print('simulation for Approximation.py done')
+    #print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+
+    #print('------------------------------------------------------------------------------------')
+    #print('processing simulation for Genetic_Algorithm.py')
+    #print(f'best for c1 = {C_opts[0]}')
     #res = [(None, None), None]
     #GA.eval_file(1, path_C+'c', res, 0)
     #print(f'genetic = {res[0][0]}')
@@ -168,6 +185,6 @@ if __name__ == '__main__' :
     #plt.plot(range(len(res[0][1])), res[0][1])
     #plt.show()
     #simulation_recuit(1,'data/B/b',10)
-    simulation_genetic(3,'data/B/b',10)
-    print('simulation for Genetic_Algorithm.py done')
-    print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+    #simulation_genetic(3,'data/B/b',10)
+    #print('simulation for Genetic_Algorithm.py done')
+    #print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
