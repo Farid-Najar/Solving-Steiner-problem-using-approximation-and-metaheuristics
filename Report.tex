@@ -256,7 +256,7 @@
 
 
         \subsection{Algorithme génétique}
-        Pour cet algorithme, il est possible de faire varier ses performances en faisant varier l'initialisation (fonction $init$) ou le paramètre $maxpop$.
+        Pour cet algorithme, il est possible de faire varier ses performances en faisant varier l'initialisation (fonction $init$) ou le paramètre \hyperref[sélection]{$m$}.
 
         \subsubsection{Initialisation}
         
@@ -275,7 +275,7 @@
         Il est ainsi préférable d'utiliser une initialisation aléatoire.
 
         \subsubsection{Max population}
-        On considère donc une initialisation aléatoire. Le graphe de gauche de  \hyperref[Figure5]{(Figure 5)} nous permet de comprendre qu'à partir d'un certain palier, changer la valeur de $maxpop$ n'apporte rien à l'algorithme, tout en le ralentissant fortement.
+        On considère donc une initialisation aléatoire. Le graphe de gauche de  \hyperref[Figure5]{(Figure 5)} nous permet de comprendre qu'à partir d'un certain palier, changer la valeur de \hyperref[sélection]{$m$} n'apporte rien à l'algorithme, tout en le ralentissant fortement.
 
         \begin{figure}
           \includegraphics[width=0.5\textwidth]{best_b2_evaluation_diff genetic max_pop 15 30.png}
@@ -289,7 +289,7 @@
         Ainsi, une population maximale de 15 semble être la valeur optimale pour cet algorithme.
 
 
-        De ce qui précède, peu importe les circonstances, les paramètres optimaux pour l'algorithme génétique sont $init = random$ et $maxpop = 15$.
+        De ce qui précède, peu importe les circonstances, les paramètres optimaux pour l'algorithme génétique sont $init = random$ et $\hyperref[sélection]{m} = 15$.
 
         \subsection{Comparaison}
         Étant donné que l'on a identifié pour les deux algorithmes les paramètres optimaux, il peut être intéressant de connaître lequel est le plus performant.
@@ -310,10 +310,10 @@
         \subsection{Conclusion}
 
         \begin{figure}
+          \label{Figure7}
           \includegraphics[width=0.5\textwidth]{best_b1_evaluation_recuit multiple.png}
           \includegraphics[width=0.5\textwidth]{best_b10_evaluation_recuit multiple.png}
           \caption{Simulation de l'algorithme recuit sur b1 et b10}
-          \label{Figure7}
         \end{figure}
 
         On peut ainsi conclure, en observant sur la \hyperref[Figure7]{(Figure 7)} que l'algorithme de recuit multiple est probablement le mieux, étant donné que l'on a généralement des très gros jeux de données, et qu''il converge de façon assez précise même sur d'autres graphes.
