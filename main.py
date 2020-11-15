@@ -4,6 +4,7 @@ import Annealing_Algorithm as AA
 import matplotlib.pyplot as plt
 import numpy as np
 from threading import Thread
+import time
 
 path_B = 'data/B/'
 path_C = 'data/C/'
@@ -173,44 +174,15 @@ if __name__ == '__main__' :
 
     #simulation_genetic(nfile,path,target_name = "genetic max_pop 30", label = "genetic")
     #simulation_recuit(nfile,path,target_name = "recuit 20000 0.999", label = "recuit")
-    plotEvaluation([simulation(100,nfile,path,AA.eval_file_m)]
+
+    
+    #diff 
+    plotEvaluation([simulation(100,nfile,path,GA.eval_file)
+                    ,simulation(100,nfile,path,AA.eval_file_m)]
                    ,nfile
                    ,path
-                   ,target_name = "recuit multiple 2000 10"
-                   ,labels = ["recuit multiple"])
+                   ,target_name = "diff genetic multiple"
+                   ,labels = ["genetic","recuit multiple"])
 
-    #simulation_genetic(nfile,path,number_of_simulation = 10,target_name = "TEST", label = "LABEL")
-    #simulation_recuit(nfile,path,number_of_simulation = 10,target_name = "TEST", label = "LABEL")
-    
-    #number_of_simulation = 100
-    #simulation_genetic(nfile,path,target_name = "genetic max_pop 5")
-    #plotEvaluation([simulation(10,nfile,path,AA.eval_file)
-    #                ,simulation(10,nfile,path,AA.eval_file_m)]
-    #               ,nfile
-    #               ,path, target_name = "TEST"
-    #               ,labels = ["recuit","recuit multiple"])
-    
-    #simulation_recuit(nfile,path,target_name = "recuit multiple 2000 10")
-    #plotEvaluation([simulation(10,nfile,path,AA.eval_file),
-                    #simulation(10,nfile,path,GA.eval_file)]
-                  # ,nfile
-                   #,path, target_name = "g against r")
-    #print('processing simulation for Approximation.py')
-    #simulation_Approximation()
-    #print('simulation for Approximation.py done')
-    #print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
 
-    #print('------------------------------------------------------------------------------------')
-    #print('processing simulation for Genetic_Algorithm.py')
-    #print(f'best for c1 = {C_opts[0]}')
-    #res = [(None, None), None]
-    #GA.eval_file(1, path_C+'c', res, 0)
-    #print(f'genetic = {res[0][0]}')
-    #Approximation.eval_file(0, path_C+'c', res, 1)
-    #print(f'Approximation = {res[1]}')
-    #plt.plot(range(len(res[0][1])), res[0][1])
-    #plt.show()
-    #simulation_recuit(1,'data/B/b',10)
-    #simulation_genetic(3,'data/B/b',10)
-    #print('simulation for Genetic_Algorithm.py done')
-    #print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+    
