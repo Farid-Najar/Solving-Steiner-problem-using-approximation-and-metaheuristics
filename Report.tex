@@ -64,8 +64,8 @@
         \begin{itemize}
 	\item[1.] On considère trois étages de sommets :
           \begin{itemize}
-          \item[a.] Le premier étage est consistitué d'un seul sommet, considéré comme terminal
-          \item[b.] Le deuxième étage est consititué de $K$ sommets non terminaux
+          \item[a.] Le premier étage est constitué d'un seul sommet, considéré comme terminal
+          \item[b.] Le deuxième étage est constitué de $K$ sommets non terminaux
           \item[c.] Le troisième étage est constitué de $n$ sommets tous terminaux
           \end{itemize}
         \item[2.] le sommet du premier étage est relié à tous les sommets du second étage. Un sommet du second étage est relié à un sommet du dernier étage si et seulement si l'ensemble que représente le sommet du second étage contient le point que représente le sommet du dernier étage.
@@ -190,6 +190,20 @@
 	\section{Résultats et performances}
 
         Dans l'optique d'obtenir les résultats expérimentaux les plus performants possible, il est nécessaire de faire varier les différents paramètres des algorithmes de plusieurs façons différentes, afin des les ajuster le plus précisément possible. Pour étudier l'efficacité d'un algorithme, dépendamment de ce que l'on veut, on peut vouloir avoir des performances de précision, des performances de rapidité d'exécution ou encore des performances de convergence (dans le sens où l'algorithme peut prendre du temps à s'exécuter mais utilise que peu d'itérations).
+        
+        \subsection{Approximation}
+        
+        \begin{figure}
+        	\begin{center}
+        		\includegraphics[width=0.45\textwidth]{plot_B.png}
+        		\includegraphics[width=0.45\textwidth]{plot_C.png}
+        	\end{center}
+        	\caption{Résultats de l'algorithme d'approximation sur les graphes b et c}
+        	\label{Figure1}
+        \end{figure}
+    
+    	L'algorithme d'approximation s'est montré assez performant et on a un taux d'approximation pratique bien moins élevé que le théorique. \hyperref[Figure1]{La figure 1} montre bien les résultats qui sont très proche des résultats optimaux.
+        
 
 
         \subsection{Algorithme recuit}
@@ -203,10 +217,10 @@
         		\includegraphics[width=0.8\textwidth]{best_b2_evaluation_diff recuit 2000 20000.png}
         	\end{center}
         	\caption{Simulation sur b2 de l'algorithme recuit avec deux températures différentes}
-        	\label{Figure1}
+        	\label{Figure2}
         \end{figure}
         
-        \hyperref[Figure1]{(Figure 1)} montre en particulier la différence de convergence entre un algorithme de recuit avec température initiale 2000 ou 20000. Ce graphique nous montre en particulier que la température initiale va modifier la vitesse de convergence de l'algorithme. Plus la température est élevée, plus le début sera lent. Par ailleurs, plus la température initiale est élevée, plus le temps d'exécution de l'algorithme sera long pour un résultat relativement identique.
+        \hyperref[Figure2]{(Figure 2)} montre en particulier la différence de convergence entre un algorithme de recuit avec température initiale 2000 ou 20000. Ce graphique nous montre en particulier que la température initiale va modifier la vitesse de convergence de l'algorithme. Plus la température est élevée, plus le début sera lent. Par ailleurs, plus la température initiale est élevée, plus le temps d'exécution de l'algorithme sera long pour un résultat relativement identique.
         Par conséquent, il est préférable, dans une circonstance de rapidité d'exécution de l'algorithme, d'initialiser la température à 2000.
         En revanche, bien que la convergence ait toujours lieu avec des températures initiales inférieures, fixer la température à 2000 est un juste milieu entre le temps d'exécution de l'algorithme et la stabilité des solution. En effet, une température inférieure donnera plus de chance à une divergence de la solution.\\
         
@@ -218,12 +232,12 @@
         %\end{figure}
 
         \subsubsection{Paramètre lambda}
-        La température initiale fixée à 2000, on compare dans la \hyperref[Figure2]{figure 2} la convergence du recuit pour $\lambda$ fixé à 0.99 ou 0.999 sans variation interne et la convergence du recuit pour $\lambda$ fixé à 0.99 l'un sans variation interne et l'autre avec.
+        La température initiale fixée à 2000, on compare dans la \hyperref[Figure3]{figure 3} la convergence du recuit pour $\lambda$ fixé à 0.99 ou 0.999 sans variation interne et la convergence du recuit pour $\lambda$ fixé à 0.99 l'un sans variation interne et l'autre avec.
         \begin{figure}
         		\includegraphics[width=0.5\textwidth]{best_b2_evaluation_diff recuit 0.99 0.999.png}
         		\includegraphics[width=0.5\textwidth]{best_b2_evaluation_diff recuit 0.99 change.png}
         	\caption{Simulation sur b2 de l'algorithme recuit avec deux lambda différents}
-        	\label{Figure2}
+        	\label{Figure3}
         \end{figure}
         
 %        \begin{figure}
@@ -233,23 +247,23 @@
     %    	\caption{Simulation sur b2 de l'algorithme recuit avec deux lambda différents}
      %   	\label{Figure3}
       %  \end{figure}
-        Le premier graphe (\hyperref[Figure2]{(Figure 2)}) nous montre en particulier que l'algorithme prendra plus de temps à converger avec un lambda fixé à 0.999 mais convergera vers une solution plus précise. Le second graphe nous montre que l'alternative de changer en cours de route la valeur de $\lambda$ est un compromis très efficace entre rapidité et précision. En effet, la valeur obtenu est meilleure avec le changement que sans, et l'algorithme converge plus rapidement. 
+        Le premier graphe (\hyperref[Figure3]{(Figure 3)}) nous montre en particulier que l'algorithme prendra plus de temps à converger avec un lambda fixé à 0.999 mais convergera vers une solution plus précise. Le second graphe nous montre que l'alternative de changer en cours de route la valeur de $\lambda$ est un compromis très efficace entre rapidité et précision. En effet, la valeur obtenu est meilleure avec le changement que sans, et l'algorithme converge plus rapidement. 
 
         Par conséquent il est préférable d'utiliser la version faisant varier le $\lambda$ dans l'algorithme.
 
         \subsubsection{Version multiple}
         On fixe à présent la température initiale à 2000, le paramètre $\lambda$ à 0.99 (en considérant le changement du $\lambda$ dans l'algorithme).
-        Le graphe suivant \hyperref[Figure3]{(figure 3)} compare l'algorithme de recuit à celui de recuit multiple pour un nombre de chercheur fixé à 5.
+        Le graphe suivant \hyperref[Figure4]{(figure 4)} compare l'algorithme de recuit à celui de recuit multiple pour un nombre de chercheur fixé à 5.
         \begin{figure}
           \includegraphics[width=0.5\textwidth]{best_b2_evaluation_diff multiple simple.png}
           \includegraphics[width=0.5\textwidth]{best_b2_evaluation_diff recuit multiple 5 10.png}
           \caption{Simulation sur b2 de l'algorithme recuit simple et recuit multiple}
-          \label{Figure3}
+          \label{Figure4}
         \end{figure}
 
         Ce graphique nous montre que sur le point de vitesse de convergence et de précision de convergence, l'algorithme de recuit multiple est bien plus performant que le recuit simple. Il est par conséquent préférable, si on cherche ces performances, de choisir l'algorithme multiple. En revanche, en dénotant $n$ le nombre de chercheur pour l'algorithme multiple, ce dernier prend environ pour une simulation $n$ fois plus de temps que le recuit simple.L'algorithme de recuit simple réalisant résultat tout de même très satisfaisant, il peut être préférable de choisir le recuit simple si la rapidité d'exécution est la priorité.
 
-        Il est notable aussi de noter que $n$=5 est une valeur efficace pour l'algorithme de recuit multiple. En effet, comme le montre le graphe de droite de \hyperref[Figure3]{(Figure 3)}, il n'y a pratiquement pas de différence entre $n=5$ et $n=10$, si ce n'est le temps d'exécution (bien inférieure pour $n$=5)
+        Il est notable aussi de noter que $n$=5 est une valeur efficace pour l'algorithme de recuit multiple. En effet, comme le montre le graphe de droite de \hyperref[Figure4]{(Figure 4)}, il n'y a pratiquement pas de différence entre $n=5$ et $n=10$, si ce n'est le temps d'exécution (bien inférieure pour $n$=5)
 
 
         De ce qui précède, il est donc totalement préférable si l'on cherche une performance de convergence, de choisir l'algorithme de recuit multiple avec pour paramètres $T_{init} = 2000$,  $\lambda = 0.99$ et $n=5$, tandis que si l'on cherche une performance de rapidité d'exécution, il est préférable de choisir l'algorithme de recuit simple avec pour paramètres $T_{init} = 2000$ et $\lambda = 0.99$ avec changement à l'intérieur du code.
@@ -260,14 +274,14 @@
 
         \subsubsection{Initialisation}
         
-        Une multitudes d'initialisation sont possibles pour cet algorithme. On pourrait, bien que nous ne le faisons pas dans cette section, initialiser notre algorithme avec une approximation déjà faite. Le but étant que notre algorithme soit appliqué sur notre jeu de donnée sans étude préalable, on a opté pour une initialisation sans approximation préalable. Les graphes de la \hyperref[Figure4]{(Figure 4)} montrent en particulier que l'initialisation aléatoire est la meilleure.
+        Une multitudes d'initialisation sont possibles pour cet algorithme. On pourrait, bien que nous ne le faisons pas dans cette section, initialiser notre algorithme avec une approximation déjà faite. Le but étant que notre algorithme soit appliqué sur notre jeu de donnée sans étude préalable, on a opté pour une initialisation sans approximation préalable. Les graphes de la \hyperref[Figure5]{(Figure 5)} montrent en particulier que l'initialisation aléatoire est la meilleure.
 
         \begin{figure}
           \includegraphics[width=0.33\textwidth]{best_b2_evaluation_genetic random init.png}
           \includegraphics[width=0.33\textwidth]{best_b2_evaluation_genetic ones init.png}
           \includegraphics[width=0.32\textwidth]{best_b2_evaluation_genetic zeros init.png}
           \caption{Simulation sur b2 de l'algorithme génétique avec différentes initialisations}
-          \label{Figure4}
+          \label{Figure5}
         \end{figure}
         
 
@@ -275,16 +289,16 @@
         Il est ainsi préférable d'utiliser une initialisation aléatoire.
 
         \subsubsection{Max population}
-        On considère donc une initialisation aléatoire. Le graphe de gauche de  \hyperref[Figure5]{(Figure 5)} nous permet de comprendre qu'à partir d'un certain palier, changer la valeur de \hyperref[sélection]{$m$} n'apporte rien à l'algorithme, tout en le ralentissant fortement.
+        On considère donc une initialisation aléatoire. Le graphe de gauche de  \hyperref[Figure6]{(Figure 6)} nous permet de comprendre qu'à partir d'un certain palier, changer la valeur de \hyperref[sélection]{$m$} n'apporte rien à l'algorithme, tout en le ralentissant fortement.
 
         \begin{figure}
           \includegraphics[width=0.5\textwidth]{best_b2_evaluation_diff genetic max_pop 15 30.png}
           \includegraphics[width=0.5\textwidth]{best_b2_evaluation_genetic max_pop 5.png}
           \caption{Simulation sur b2 de l'algorithme génétique avec différentes valeurs de max population}
-          \label{Figure5}
+          \label{Figure6}
         \end{figure}
 
-        En revanche, le graphe de droite de \hyperref[Figure5]{(Figure 5)} nous montre qu'avec une population maximale trop faible, les barres d'erreurs deviennent relativement grandes. Cela signifie que l'algorithme est moins efficace en général.
+        En revanche, le graphe de droite de \hyperref[Figure6]{(Figure 6)} nous montre qu'avec une population maximale trop faible, les barres d'erreurs deviennent relativement grandes. Cela signifie que l'algorithme est moins efficace en général.
 
         Ainsi, une population maximale de 15 semble être la valeur optimale pour cet algorithme.
 
@@ -295,28 +309,33 @@
         Étant donné que l'on a identifié pour les deux algorithmes les paramètres optimaux, il peut être intéressant de connaître lequel est le plus performant.
 
         \begin{figure}
-          \begin{center}
-            \includegraphics[width=0.8\textwidth]{best_b2_evaluation_diff genetic multiple.png}
-          \end{center}
-          \caption{Simulation sur b2 de l'algorithme recuit simple et recuit multiple}
-          \label{Figure6}
+        	\begin{center}
+        		\includegraphics[width=0.8\textwidth]{best_b2_evaluation_diff genetic multiple.png}
+        	\end{center}
+        	\caption{Simulation sur b2 de l'algorithme recuit simple et recuit multiple}
+        	\label{Figure7}
         \end{figure}
 
-        Le graphe de la \hyperref[Figure6]{(Figure 6)} nous montre que les deux vont converger vers à peu près la même valeur, en ayant à peu près les mêmes barres d'erreurs. En revanche, en terme de vitesse de convergence, l'algorithme génétique est plus performant que recuit.
+        Le graphe de la \hyperref[Figure7]{(Figure 7)} nous montre que les deux vont converger vers à peu près la même valeur, en ayant à peu près les mêmes barres d'erreurs. En revanche, en terme de vitesse de convergence, l'algorithme génétique est plus performant que recuit.
         Une analyse sur différents jeux de données nous a permis de voir que pour des taille relativement petite de jeux de données, l'algorithme génétique sera plus rapide que le recuit. Par exemple, sur une simulation sur le jeu de donnée b2.stp, génétique a pris moins d'une seconde pour s'exécuter tandis que recuit en a pris près de 4.
         En revanche, plus le jeu de donnée sera conséquent, moins l'algorithme génétique sera rapide. En effet, sur le jeu de donnée c1.stp contenant 500 nœuds, génétique a pris à peu près 45 secondes tandis que recuit s'est exécuté pendant un peu moins de 35 secondes.
 
-
+		\break
         \subsection{Conclusion}
 
         \begin{figure}
-          \label{Figure7}
-          \includegraphics[width=0.5\textwidth]{best_b1_evaluation_recuit multiple.png}
-          \includegraphics[width=0.5\textwidth]{best_b10_evaluation_recuit multiple.png}
-          \caption{Simulation de l'algorithme recuit sur b1 et b10}
+        	\begin{center}
+        		\includegraphics[width=0.45\textwidth]{best_b1_evaluation_recuit multiple.png}
+        		\includegraphics[width=0.45\textwidth]{b10_evaluation_recuit multiple.png}
+        	\end{center}
+        	\caption{Simulation de l'algorithme recuit sur b1 et b10}
+        	\label{Figure8}
         \end{figure}
-
-        On peut ainsi conclure, en observant sur la \hyperref[Figure7]{(Figure 7)} que l'algorithme de recuit multiple est probablement le mieux, étant donné que l'on a généralement des très gros jeux de données, et qu''il converge de façon assez précise même sur d'autres graphes.
+    
+        On peut ainsi conclure, en observant sur la \hyperref[Figure8]{(Figure 8)} que l'algorithme de recuit multiple est probablement le meilleur, étant donné que l'on a généralement des très gros jeux de données, et qu'il converge de façon assez précise même sur d'autres graphes.
         
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        \begin{center}
+        	\textbf{***FIN***}
+        \end{center}
+        
 \end{document}
