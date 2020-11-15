@@ -41,21 +41,21 @@
 	\end{titlepage}
 
 	\section{Contexte\label{Contexte}}
-	Imaginons que nous avons un réseau avec une source et plusieurs destinations. Nous voulons avoir des chemins depuis la source vers les destinations sans être coupé par d'autres chemins. Dit autrement, nous voulons un graphe sans cycles, i.e. un arbre, en partant de la source et en ayant les destinations qu'on veut visiter. De plus, pour aller d'un point à l'autre faut payer un coût. Le but est de trouver l'arbre qui vérifie les conditions énoncées de coût minimal.
+	Imaginons que nous avons un réseau avec une source et plusieurs destinations. Nous voulons avoir des chemins depuis la source vers les destinations sans être coupé par d'autres chemins. Dit autrement, nous voulons un graphe sans cycle, i.e. un arbre, en partant de la source et en ayant les destinations qu'on veut visiter. De plus, pour aller d'un point à l'autre, il faut payer un coût. Le but est de trouver l'arbre qui vérifie les conditions énoncées de coût minimal.
 	\section{Modélisation\label{Modélisation}}
-	Nous pouvons modéliser le réseau par un graphe connexe $G = (V, E)$ avec $V$ l'ensemble des sommets et $E$ l'ensembles des arrêtes. On introduit aussi une fonction $w:E\rightarrow \mathbb{N}$ qui à chaque arrête $e\in E$ attribut un poids $w(e)$. Soit $T$ l'ensemble des "terminaux" qui sont tout simplement les destinations que nous avons énoncé. On remarque que la source peut être considérée comme un terminal. En effet, comme notre solution est un arbre, on peut le représenter comme on veut en prenant un nœud quelconque comme source. Alors notre problème est de trouver un arbre $A = (V', E')$ (graphe connexe sans cycles), tel que, $T\subseteq V'$ et on veut minimiser \label{poids}{$\sum_{e\in E'}w(e)$}. On représente les solutions comme une liste de 0 ou 1 de taille $|E|$. En numérotant les arrêtes, pour une solution $s$, $s_i$ nous dit si le $i$-ème arrête est dans l'arbre ou pas (1 oui, 0 non).
+	Nous pouvons modéliser le réseau par un graphe connexe $G = (V, E)$ avec $V$ l'ensemble des sommets et $E$ l'ensemble des arêtes. On introduit aussi une fonction $w:E\rightarrow \mathbb{N}$ qui à chaque arête $e\in E$ attribut un poids $w(e)$. Soit $T$ l'ensemble des "terminaux" qui sont tout simplement les destinations que nous avons énoncé. On remarque que la source peut être considérée comme un terminal. En effet, comme notre solution est un arbre, on peut le représenter comme on veut en prenant un nœud quelconque comme source. Alors notre problème est de trouver un arbre $A = (V', E')$ (graphe connexe sans cycle), tel que $T\subseteq V'$ et on veut minimiser \label{poids}{$\sum_{e\in E'}w(e)$}. On représente les solutions comme une liste de 0 ou 1 de taille $|E|$. En numérotant les arêtes, pour une solution $s$, $s_i$ nous dit si le $i$-ème arête est dans l'arbre ou pas (1 oui, 0 non).
 	\section{Complexité\label{Complexité}}
-        Selon la modélisation que l'on a décider de prendre pour le problème de l'arbre de Steiner, celui-ci est NP-complet.
+        Selon la modélisation que l'on a décidé de prendre pour le problème de l'arbre de Steiner, celui-ci est NP-complet.
 
         \subsection{Steiner est NP}
-        Etant donné une solution $A$ au problème énoncé ci-dessus, on peut vérifier en temps polynomiale les éléments suivants :
+        Etant donné une solution $A$ au problème énoncé ci-dessus, on peut vérifier en temps polynomial les éléments suivants :
 
         \begin{itemize}
 	\item[1.] $A$ est bien un arbre connexe ne contenant aucun cycle
         \item[2.] $A$ couvre bien tous les sommets de $T$
 	\end{itemize}
 
-        Ce qui nous reste à vérifier est que cet arbre est minimal en terme de poids. On sait en particulier qu'il existe un algorithme de vérification pour ce problème qui se calcule en temps linéaire. Il en suit donc que ce problème est NP
+        Ce qui nous reste à vérifier est que cet arbre est minimal en terme de poids. On sait en particulier qu'il existe un algorithme de vérification pour ce problème qui se calcule en temps linéaire. Il en suit donc que ce problème est NP.
 
         \subsection{Steiner est NP-complet}
         Pour aboutir au fait que Steiner est NP-complet, on peut se baser sur une réduction du problème $Set Cover$ dans Steiner. En effet, ce dernier est connu pour être NP-complet.
@@ -68,20 +68,20 @@
           \item[b.] Le deuxième étage est consititué de $K$ sommets non terminaux
           \item[c.] Le troisième étage est constitué de $n$ sommets tous terminaux
           \end{itemize}
-        \item[2.] le sommet du premier étage est relié à tous les sommets du second étage. Un sommet du second est relié à un sommet du dernier étage si et seulement si l'ensemble que représente le sommet du second étage contient le point que représente le sommet du dernier étage.
-          \item[3.] Chacun des arêtes possède un poids dépendemment du problème
+        \item[2.] le sommet du premier étage est relié à tous les sommets du second étage. Un sommet du second étage est relié à un sommet du dernier étage si et seulement si l'ensemble que représente le sommet du second étage contient le point que représente le sommet du dernier étage.
+          \item[3.] Chacunes des arêtes possède un poids dépendemment du problème
 	\end{itemize}
 
         Si le problème de $Set Cover$ possède une solution pour $K$ alors il existe une solution pour Steiner avec $K' = n+K$
 
-        En partant d'une solution de Steiner pour $K'$ du type le graphe présente ci-avant, alors la solution pour $Set Cover$ pour $K$ est donnée.
+        En partant d'une solution de Steiner pour $K'$ du type le graphe présenté ci-avant, alors la solution pour $Set Cover$ avec $K$ est donnée.
         Supposons que l'on change une seule arête dans le graphe de Steiner. Le nouvel arbre que l'on obtient est toujours (de facon évidente car on change une seule arête) équivalent à un arbre du type présenté ci-avant. En procédant par récurrence, il en suit qu'on a toujours une solution de $Set Cover$ si on a une solution pour Steiner
 
 
         Ainsi, on a réussi à créer une réduction de $Set Cover$ dans Steiner avec $Set Cover$ NP-complet donc Steiner l'est
         
 	\section{Algorithme d'approximation et taux d'approximation\label{Approx}}
-	Comme le problème est NP-Complet, alors si on considère $P\neq NP$, on ne peut construire un algorithme donnant une solution optimale en temps polynomial. Dans ce cas, nous avons plusieurs façon de trouver une solution qui est proche ou, dans certain cas, égal à une solution optimale. Dans ce rapport, nous allons faire et évaluer deux de ces méthodes, "\textbf{approximation}" et "\textbf{méta-heuristique}". Commençons par l'approximation. Une approximation consiste à essayer, à l'aide de différentes techniques, de trouver la meilleure solution possible en temps polynomial avec une distance maximale déterminée par rapport à la solution optimale qui est appelé le \textbf{taux d'approximation} qui est un critère essentiel qui nous permet d'évaluer ce genre d'algorithmes. On peut construire un algorithme d'approximation de différentes manières. Dans cette section, nous allons voir une de ces manières.
+	Comme le problème est NP-Complet, alors si on considère $P\neq NP$, on ne peut construire un algorithme donnant une solution optimale en temps polynomial. Dans ce cas, nous avons plusieurs façon de trouver une solution qui est proche ou, dans certain cas, égale à une solution optimale. Dans ce rapport, nous allons faire et évaluer deux de ces méthodes, "\textbf{approximation}" et "\textbf{méta-heuristique}". Commençons par l'approximation. Une approximation consiste à essayer, à l'aide de différentes techniques, de trouver la meilleure solution possible en temps polynomial avec une distance maximale déterminée par rapport à la solution optimale qui est appelé le \textbf{taux d'approximation} qui est un critère essentiel qui nous permet d'évaluer ce genre d'algorithmes. On peut construire un algorithme d'approximation de différentes manières. Dans cette section, nous allons voir une de ces manières.
 	
 	\subsection{Algorithme d'approximation\label{Algo approx}}
 	Nous cherchons un arbre qui passe par tous les sommets terminaux. On remarque que trouver un tel arbre dans un graphe quelconque est équivalent à trouver cet arbre dans un graphe complet avec les terminaux comme sommet. En effet, si on construit ce graphe en mettant la distance minimale entre chaque sommet comme poids de l'arrête qui les relie, et trouver un arbre couvrant de poids minimum qui passe par tous les sommets, on est sûr que nous avons un arbre pour le graphe d'origine en passant par les terminaux. On doit aussi enregistrer les plus courts chemins dans la mémoire afin de ne pas être obligé de les recalculer, et ainsi, ajouter une complexité supplémentaire à notre algorithme. Pour récapituler, nous avons le procédé suivant : 
@@ -241,18 +241,15 @@
         On fixe à présent la température initiale à 2000, le paramètre $\lambda$ à 0.99 (en considérant le changement du $\lambda$ dans l'algorithme).
         Le graphe suivant \hyperref[Figure3]{(figure 3)} compare l'algorithme de recuit à celui de recuit multiple pour un nombre de chercheur fixé à 5.
         \begin{figure}
-        	\begin{center}
-        		\includegraphics[width=1\textwidth]{best_b2_evaluation_diff multiple simple.png}
-        	\end{center}
-        	\caption{Simulation sur b2 de l'algorithme recuit simple et recuit multiple}
-        	\label{Figure3}
+          \includegraphics[width=0.5\textwidth]{best_b2_evaluation_diff multiple simple.png}
+          \includegraphics[width=0.5\textwidth]{best_b2_evaluation_diff recuit multiple 5 10.png}
+          \caption{Simulation sur b2 de l'algorithme recuit simple et recuit multiple}
+          \label{Figure3}
         \end{figure}
 
         Ce graphique nous montre que sur le point de vitesse de convergence et de précision de convergence, l'algorithme de recuit multiple est bien plus performant que le recuit simple. Il est par conséquent préférable, si on cherche ces performances, de choisir l'algorithme multiple. En revanche, en dénotant $n$ le nombre de chercheur pour l'algorithme multiple, ce dernier prend environ pour une simulation $n$ fois plus de temps que le recuit simple.L'algorithme de recuit simple réalisant résultat tout de même très satisfaisant, il peut être préférable de choisir le recuit simple si la rapidité d'exécution est la priorité.
 
-        Il est notable aussi de noter que $n$=5 est une valeur efficace pour l'algorithme de recuit multiple. En effet, comme le montre le graphe suivant ({{red} best b2 evaluation diff recuit multiple 5 10}), il n'y a pratiquement pas de différence entre $n$=5 et $n$=10, si ce n'est le temps d'exécution (bien inférieure pour $n$=5)
-
-        
+        Il est notable aussi de noter que $n$=5 est une valeur efficace pour l'algorithme de recuit multiple. En effet, comme le montre le graphe de droite de \hyperref[Figure3]{(Figure 3)}, il n'y a pratiquement pas de différence entre $n=5$ et $n=10$, si ce n'est le temps d'exécution (bien inférieure pour $n$=5)
 
 
         De ce qui précède, il est donc totalement préférable si l'on cherche une performance de convergence, de choisir l'algorithme de recuit multiple avec pour paramètres $T_{init} = 2000$,  $\lambda = 0.99$ et $n=5$, tandis que si l'on cherche une performance de rapidité d'exécution, il est préférable de choisir l'algorithme de recuit simple avec pour paramètres $T_{init} = 2000$ et $\lambda = 0.99$ avec changement à l'intérieur du code.
@@ -263,7 +260,7 @@
 
         \subsubsection{Initialisation}
         
-        Une multitudes d'initialisation sont possibles pour cet algorithme. On pourrait, bien que nous ne le faisons pas dans cet section, initialiser notre algorithme avec une approximation déjà faite. Le but étant que notre algorithme soit appliqué sur notre jeu de donnée sans étude préalable, on a opté pour une initialisation sans approximation préalable. Les graphes de la \hyperref[Figure4]{(Figure 4)} montrent en particulier que l'initialisation aléatoire est la meilleure.
+        Une multitudes d'initialisation sont possibles pour cet algorithme. On pourrait, bien que nous ne le faisons pas dans cette section, initialiser notre algorithme avec une approximation déjà faite. Le but étant que notre algorithme soit appliqué sur notre jeu de donnée sans étude préalable, on a opté pour une initialisation sans approximation préalable. Les graphes de la \hyperref[Figure4]{(Figure 4)} montrent en particulier que l'initialisation aléatoire est la meilleure.
 
         \begin{figure}
           \includegraphics[width=0.3\textwidth]{best_b2_evaluation_genetic random init.png}
