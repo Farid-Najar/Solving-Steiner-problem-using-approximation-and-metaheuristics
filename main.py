@@ -171,13 +171,13 @@ if __name__ == '__main__' :
     nfile = 2
     path = "data/B/b"
 
-    simulation_genetic(nfile,path,target_name = "genetic max_pop 30", label = "genetic")
-    #simulation_recuit(nfile,path,target_name = "", label = "recuit")
-    #plotEvaluation([]
-     #              ,nfile
-      #             ,path
-       #            ,target_name = ""
-        #           ,labels = [])
+    #simulation_genetic(nfile,path,target_name = "genetic max_pop 30", label = "genetic")
+    #simulation_recuit(nfile,path,target_name = "recuit 20000 0.999", label = "recuit")
+    plotEvaluation([simulation(100,nfile,path,AA.eval_file_m)]
+                   ,nfile
+                   ,path
+                   ,target_name = "recuit multiple 2000 10"
+                   ,labels = ["recuit multiple"])
 
     #simulation_genetic(nfile,path,number_of_simulation = 10,target_name = "TEST", label = "LABEL")
     #simulation_recuit(nfile,path,number_of_simulation = 10,target_name = "TEST", label = "LABEL")

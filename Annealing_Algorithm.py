@@ -191,7 +191,7 @@ def eval_file_m(number_file : int, path : str, res : list, i : int):
         terms = my_class.terms
         graph = my_class.my_graph
         #sol, best_list = recuit(graph,terms,20000,1,0.99)
-        sol, best_list = recuit_multiple(graph,terms,2000,1,lamb = 0.99, nb_researchers = 5)
+        sol, best_list = recuit_multiple(graph,terms,2000,1,lamb = 0.99, nb_researchers = 10)
         result = Approximation.eval_sol(graph,terms,sol)
     print(f'Processing file {path+str(number_file)}.stp ended.\n')
     res[i] = (result,best_list)
