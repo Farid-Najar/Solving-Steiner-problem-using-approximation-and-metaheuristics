@@ -7,7 +7,7 @@ import copy as cp
 from numpy import exp
 import Genetic_Algorithm
 
-def recuit(graph : nx.Graph, terms : list, T_init, T_limit, lamb = .99) :
+def recuit(graph : nx.Graph, terms : list, T_init, T_limit, lamb = .99, var = True) :
     """
     This function finds a solution for the steiner problem
         using annealing algorithm
@@ -37,8 +37,9 @@ def recuit(graph : nx.Graph, terms : list, T_init, T_limit, lamb = .99) :
         list_best.append(eval_best)
         T *= lamb
         m += 1
+
         
-        if(flag100 and T<=100):
+        if(var and flag100 and T<=100):
             flag100 = False
             lamb = .999
         #print(T)
@@ -46,6 +47,7 @@ def recuit(graph : nx.Graph, terms : list, T_init, T_limit, lamb = .99) :
     print(f'm = {m}')
     print(eval_best)
     return Genetic_Algorithm.bool_to_edges(best, [e for e in graph.edges]), list_best
+
 
 def recuit_multiple(graph : nx.Graph, terms : list, T_init, T_limit = 25, nb_researchers = 2, lamb = .99) -> (set, list) :
     """
@@ -190,7 +192,7 @@ def eval_file_m(number_file : int, path : str, res : list, i : int):
         my_parser.parse()
         terms = my_class.terms
         graph = my_class.my_graph
-        #sol, best_list = recuit(graph,terms,20000,1,0.99)
+        #sol, best_list = recuit(graph,terms,2000,1,0.99, var = False)
         sol, best_list = recuit_multiple(graph,terms,2000,1,lamb = 0.99, nb_researchers = 5)
         result = Approximation.eval_sol(graph,terms,sol)
     print(f'Processing file {path+str(number_file)}.stp ended.\n')

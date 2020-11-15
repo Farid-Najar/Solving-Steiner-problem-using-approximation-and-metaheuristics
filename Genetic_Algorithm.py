@@ -9,7 +9,7 @@ import copy as cp
 stein_file = "data/B/b1.stp"
 #stein_file = "data/test.std"
 
-def genetic(graph, terms, nb_iter=100, taille_max_population = 30):
+def genetic(graph, terms, nb_iter=100, taille_max_population = 15):
     """
     This is the main.
     :param graph: the graph for each we search a solution
@@ -161,8 +161,9 @@ def eval_file(number_file : int, path : str, res : list, i : int):
         #print_graph(graph,terms)
         print(f'number of nodes = {len(graph.nodes)}')
         print(f'number of terminals = {len(terms)}')
-        sol, best_list = genetic(graph,terms, nb_iter=6*len(graph.nodes))
+        sol, best_list = genetic(graph,terms, nb_iter=6*len(graph.nodes), taille_max_population = 15)
         #print_graph(graph,terms,sol)
         result = Approximation.eval_sol(graph,terms,sol)
     print(f'Processing file {path+str(number_file)}.stp ended.\n')
     res[i] = (result, best_list)
+

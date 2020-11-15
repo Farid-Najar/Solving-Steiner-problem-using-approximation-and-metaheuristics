@@ -172,16 +172,20 @@ if __name__ == '__main__' :
     nfile = 1
     path = "data/C/c"
 
-    simulation_genetic(nfile,path,target_name = "genetic random init", label = "genetic")
+    #simulation_genetic(nfile,path,target_name = "genetic random init", label = "genetic")
     #simulation_recuit(nfile,path,target_name = "recuit 20000 0.999", label = "recuit")
-
+    t = time.time()
+    simulation(1,nfile,path,AA.eval_file_m)
+    e = time.time()-t
+    print(f'time : {e}')
     
     #diff 
-    #plotEvaluation([simulation(100,nfile,path,AA.eval_file_m)]
+    #plotEvaluation([simulation(100,nfile,path,GA.eval_file)
+    #                ,simulation(100,nfile,path,GA.eval_file2)]
     #               ,nfile
     #               ,path
-    #               ,target_name = "recuit multiple"
-    #               ,labels = ["recuit multiple"])
+    #               ,target_name = "diff genetic max_pop 15 30"
+    #               ,labels = ["genetic max_pop 15","genetic max_pop 30"])
 
 
     

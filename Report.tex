@@ -154,5 +154,68 @@
 	
 	
 	\section{Résultats et performances}
+
+        Dans l'optique d'obtenir les résultats expérimentaux les plus performants possible, il est nécessaire de faire varier les différents paramètres des algorithmes de plusieurs façons différentes, afin des les ajuster le plus précisément possible. Pour étudier l'efficacité d'un algorithme, dépendemment de ce que l'on veut, on peut vouloir avoir des performances de précision, des performances de rapidité d'éxecution ou encore des performances de convergence (dans le sens où l'algorithme peut prendre du temps à s'executer mais utilise que peu d'itérations).
+
+
+        \subsection{Algorithme recuit}
+
+        Pour cet algorithme, il est possible de faire varier ses performances en faisant varier la température initiale $T_{init}$, faire varier le paramètre $\lambda$ (en argument ou dans le code même) ou encore utiliser la version multiple de cet algorithme.
+
+        \subsubsection{Température initiale}
+        
+        Le graphique suivant ({\color{red} best b2 evaluation diff recuit 2000 20000}) montre en particulier la différence de convergence entre un algorithme de recuit avec température initiale 2000 ou 20000. Ce graphique nous montre en particulier que la température initiale va modifier la vitesse de convergence de l'algorithme. Plus la température est élevée, plus le début sera lent. Par ailleurs, plus la température initiale est élevée, plus le temps d'éxecution de l'algorithme sera long pour un résultat relativement identique.
+        Par conséquent, il est préférable, dans une circonstance de rapidité d'éxecution de l'algorithme, d'initialiser la température à 2000.
+        En revanche, bien que la convergence ait toujours lieu avec des températures initiales inférieures, fixer la température à 2000 est un juste milieu entre le temps d'execution de l'algorithme et la stabilité des solution. En effet, une température inférieure donnera plus de chance à une divergence de la solution.
+
+        \subsubsection{Paramètre lambda}
+        La température initiale fixée à 2000, on compare dans les graphes suivants la convergence du recuit pour \lambda fixé à 0.99 ou 0.999 sans variation interne ({\color{red} best b2 evaluation diff recuit 0.99 0.999}) et la convergence du recuit pour \lambda fixé à 0.99 l'un sans variation interne et l'autre avec ({\color{red} best b2 evaluation diff recuit 0.99 change}).
+        Le premier graphe nous montre en particulier que l'algorithme prendra plus de temps à converger avec un lambda fixé à 0.999 mais convergera vers une solution plus précise. Le second graphe nous montre que l'alternative de changer en cours de route la valeur de \lambda est un compromis très efficace entre rapidité et précision. En effet, la valeur obtenu est meilleure avec le changement que sans, et l'algorithme converge plus rapidement. 
+
+        Par conséquent il est préférable d'utiliser la version faisant varier le \lambda dans l'algorithme.
+
+        \subsubsection{Version multiple}
+        On fixe à présent la température initiale à 2000, le paramètre \lambda à 0.99 (en considérant le changement du \lambda dans l'algorithme).
+        Le graphe suivant compare l'algorithme de recuit à celui de recuit multiple pour un nombre de chercheur fixé à 5
+        ({\color{red} best b2 evaluation diff multiple simple})
+
+        Ce graphique nous montre que sur le point de vitesse de convergence et de précision de convergence, l'algorithme de recuit multiple est bien plus performant que le recuit simple. Il est par conséquent préférable, si on cherche ces performances, de choisir l'algorithme multiple. En revanche, en dénotant $n$ le nombre de chercheur pour l'algorithme multiple, ce dernier prend environ pour une simulation $n$ fois plus de temps que le recuit simple.L'algorithme de recuit simple réalisant résultat tout de même très satisfaisant, il peut être préférable de choisir le recuit simple si la rapidité d'exécution est la priorité.
+
+        Il est notable aussi de noter que $n$=5 est une valeur efficace pour l'algorithme de recuit multiple. En effet, comme le montre le graphe suivant ({\color{red} best b2 evaluation diff recuit multiple 5 10}), il n'y a pratiquement pas de différence entre $n$=5 et $n$=10, si ce n'est le temps d'execution (bien inférieure pour $n$=5)
+
+        
+
+
+        De ce qui précède, il est donc totalement préférable si l'on cherche une performance de convergence, de choisir l'algorithme de recuit multiple avec pour paramètres $T_{nit} = 2000$,  $\lambda = 0.99$ et $n=5$, tandis que si l'on cherche une performance de rapidité d'execution, il est préférable de choisir l'algorithme de recuit simple avec pour paramètres $T_{init} = 2000$ et $\lambda = 0.99$ avec changement à l'intérieur du code.
+
+
+        \subsection{Algorithme génétique}
+        Pour cet algorithme, il est possible de faire varier ses performances en faisant varier l'initialisation (fonction $init$) ou le paramètre $max{_}pop$.
+
+        \subsubsection{Initialisation}
+        
+        Une multitudes d'initialisation sont possibles pour cet algorithme. On pourrait, bien que nous ne le faisons pas dans cet section, initialiser notre algorithme avec une approximation déjà faite. Le but étant que notre algorithme soit appliqué sur notre jeu de donnée sans étude préalable, on a opté pour une initialisation sans approximation préalable. Les graphes suivants montrent en particulier que l'initialisation aléatoire est la meilleure. ({\color{red} best b2 evaluation genetic random init})  ({\color{red} best b2 evaluation genetic ones init})  ({\color{red} best b2 evaluation genetic zeros init})
+        En effet, il est clair que l'initialisation uniquement avec des zeros ne convient absolument pas dû aux barres d'erreurs très grandes qu'il présente. Cela veut dire en particulier qu'il y a beaucoup de cas qui ne converge pas bien. De plus, on voit ici que l'algorithme initialisé aléatoirement converge plus rapidement avec des barres d'erreur bien plus petites que celui initialisé qu'avec des 1.
+        Il est ainsi préférable d'utiliser une initialisation aléatoire.
+
+        \subsubsection{Max population}
+        On considère donc une initialisation aléatoire. Le graphe suivant nous permet de comprendre qu'à partir d'un certain palier, changer la valeur de $max{_}pop$ n'apporte rien à l'algorithme, tout en le ralentissant fortement. ({\color{red} best b2 evaluation diff genetic max{_}pop 15 30})
+
+        En revanche, le graphe suivant nous montre qu'avec une population maximale trop faible, les barres d'erreurs deviennent relativement grandes. Cela signifie que l'algorithme est moins efficace en général. ({\color{red} best b2 evaluation genetic max{_}pop 5})
+
+        Ainsi, une population maximale de 15 semble être la valeur optimale pour cet algorithme.
+
+
+        De ce qui précède, peu importe les circonstances, les paramètres optimaux pour l'algorithme génétique sont $init = random$ et $max{_}pop = 15$.
+
+        \subsection{Comparaison}
+        Etant donné que l'on a identifié pour les deux algorithmes les paramètres optimaux, il peut être intéressant de connaître lequel est le plus performant.
+
+        ({\color{red} best b2 evaluation diff genetic multiple})
+
+        Le graphe précédent nous montre que les deux vont converger vers à peu près la même valeur, en ayant à peu près les mêmes barres d'erreurs. En revanche, en terme de vitesse de convergence, l'algorithme genetic est plus performant que recuit.
+        Une analyse sur différents jeux de données nous a permi de voir que pour des taille relativement petite de jeux de données, l'algorithme genetic sera plus rapide que le recuit. Par exemple, sur une simulation sur le jeu de donnée b2.stp, genetic a pris moins d'une seconde pour s'executer tandis que recuit en a pris près de 4.
+        En revanche, plus le jeu de donnée sera conséquent, moins l'algorithme genetic sera rapide. En effet, sur le jeu de donnée c1.stp contenant 500 noeuds, genetic a pris à peu près 45 secondes tandis que recuit s'est éxecuté pendant un peu moins de 35 secondes.
+        
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \end{document}
