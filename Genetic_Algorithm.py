@@ -9,7 +9,7 @@ import copy as cp
 stein_file = "data/B/b1.stp"
 #stein_file = "data/test.std"
 
-def genetic(graph, terms, nb_iter=100, taille_max_population = 15):
+def genetic(graph, terms, nb_iter=100, taille_max_population = 30):
     """
     This is the main.
     :param graph: the graph for each we search a solution

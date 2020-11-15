@@ -87,7 +87,7 @@ def plotEvaluation(results,nbr_file : int,path : str, labels = [""],target_name 
     :param nbr_file : wich file we are evaluating
     :param path : the path to the file
     :params labels : labels of the plots
-    :param target_name : name of the target evaluation function
+    :param target_name : name of the target evaluation function (used for the name of the saved png)
     :return : none
     """
     fig,ax = plt.subplots(1,1)
@@ -103,7 +103,7 @@ def plotEvaluation(results,nbr_file : int,path : str, labels = [""],target_name 
     
         error_values = [0 for i in range(len(average_values))]
         for j in range(len(error_values)):
-            if j%10==0 :
+            if j%int(len(error_values)/50)==0 :
                 for i in range(len(data)):
                     error_values[j] += (data[i][j] - average_values[j])**2
                 error_values[j] = np.sqrt(error_values[j]/number_of_simulation)
@@ -119,7 +119,7 @@ def plotEvaluation(results,nbr_file : int,path : str, labels = [""],target_name 
         
         ax.errorbar(range(len(average_values)),average_values,yerr = error_values, ecolor = "black", linewidth = 1, elinewidth = 1, label = labels[res])
             
-        
+    
         #ax.ylim((opt-5,max(opt*2,average_values[-1]+10)))
     plt.title(f'{target_name} : The evolution of the best evaluation (in average) \nfor graph {tfile}{nbr_file}.stp for {number_of_simulation} simulations')
     plt.xlabel("steps")
@@ -171,15 +171,24 @@ if __name__ == '__main__' :
     nfile = 2
     path = "data/B/b"
 
-    simulation_genetic(nfile,path,number_of_simulation = 10,target_name = "TEST", label = "LABEL")
+    simulation_genetic(nfile,path,target_name = "genetic max_pop 30", label = "genetic")
+    #simulation_recuit(nfile,path,target_name = "", label = "recuit")
+    #plotEvaluation([]
+     #              ,nfile
+      #             ,path
+       #            ,target_name = ""
+        #           ,labels = [])
 
+    #simulation_genetic(nfile,path,number_of_simulation = 10,target_name = "TEST", label = "LABEL")
+    #simulation_recuit(nfile,path,number_of_simulation = 10,target_name = "TEST", label = "LABEL")
     
     #number_of_simulation = 100
     #simulation_genetic(nfile,path,target_name = "genetic max_pop 5")
-    #plotEvaluation([simulation(100,nfile,path,AA.eval_file)
-     #               ,simulation(100,nfile,path,AA.eval_file_m)]
-      #             ,nfile
-       #            ,path, target_name = "recuit diff multiple simple")
+    #plotEvaluation([simulation(10,nfile,path,AA.eval_file)
+    #                ,simulation(10,nfile,path,AA.eval_file_m)]
+    #               ,nfile
+    #               ,path, target_name = "TEST"
+    #               ,labels = ["recuit","recuit multiple"])
     
     #simulation_recuit(nfile,path,target_name = "recuit multiple 2000 10")
     #plotEvaluation([simulation(10,nfile,path,AA.eval_file),
