@@ -48,7 +48,7 @@
         Selon la modélisation que l'on a décidé de prendre pour le problème de l'arbre de Steiner, celui-ci est NP-complet.
 
         \subsection{Steiner est NP}
-        Etant donné une solution $A$ au problème énoncé ci-dessus, on peut vérifier en temps polynomial les éléments suivants :
+        Étant donné une solution $A$ au problème énoncé ci-dessus, on peut vérifier en temps polynomial les éléments suivants :
 
         \begin{itemize}
 	\item[1.] $A$ est bien un arbre connexe ne contenant aucun cycle
@@ -69,13 +69,13 @@
           \item[c.] Le troisième étage est constitué de $n$ sommets tous terminaux
           \end{itemize}
         \item[2.] le sommet du premier étage est relié à tous les sommets du second étage. Un sommet du second étage est relié à un sommet du dernier étage si et seulement si l'ensemble que représente le sommet du second étage contient le point que représente le sommet du dernier étage.
-          \item[3.] Chacunes des arêtes possède un poids dépendemment du problème
+          \item[3.] Chacune des arêtes possède un poids dépendamment du problème
 	\end{itemize}
 
         Si le problème de $Set Cover$ possède une solution pour $K$ alors il existe une solution pour Steiner avec $K' = n+K$
 
         En partant d'une solution de Steiner pour $K'$ du type le graphe présenté ci-avant, alors la solution pour $Set Cover$ avec $K$ est donnée.
-        Supposons que l'on change une seule arête dans le graphe de Steiner. Le nouvel arbre que l'on obtient est toujours (de facon évidente car on change une seule arête) équivalent à un arbre du type présenté ci-avant. En procédant par récurrence, il en suit qu'on a toujours une solution de $Set Cover$ si on a une solution pour Steiner
+        Supposons que l'on change une seule arête dans le graphe de Steiner. Le nouvel arbre que l'on obtient est toujours (de façon évidente car on change une seule arête) équivalent à un arbre du type présenté ci-avant. En procédant par récurrence, il en suit qu'on a toujours une solution de $Set Cover$ si on a une solution pour Steiner
 
 
         Ainsi, on a réussi à créer une réduction de $Set Cover$ dans Steiner avec $Set Cover$ NP-complet donc Steiner l'est
@@ -107,7 +107,7 @@
 	\subsection{Algorithme recuit\label{recuit}}
 	L'algorithme recuit, qui fait parti des méta-heuristiques à parcours, s'inspire du recuit des métaux afin de modifier les caractéristiques de ces derniers. Le procédé consiste à chauffer le métal à une température précise et ensuite le refroidir d'une manière contrôlé. Cela nous aide à contourner certaines contraintes physiques.\\
 	
-	Dans notre cas, ce procédé peut nous aider à ne pas rester coincé dans un minimum/maximum local. En effet, nous parcourrons l'espace des solutions afin de trouver le plus petit coût. À cause de ça, si on fait un parcours normal comme "hill climbing", on peut se trouver proche d'un minimum local qui n'est pas global et ainsi, ne pas avoir des perfomances souhaitées. Cependant, il faut faire attention aux températures très élevées, car, elles peuvent nous éloigner de la solution optimale.\\
+	Dans notre cas, ce procédé peut nous aider à ne pas rester coincé dans un minimum/maximum local. En effet, nous parcourrons l'espace des solutions afin de trouver le plus petit coût. À cause de ça, si on fait un parcours normal comme "hill climbing", on peut se trouver proche d'un minimum local qui n'est pas global et ainsi, ne pas avoir des performances souhaitées. Cependant, il faut faire attention aux températures très élevées, car, elles peuvent nous éloigner de la solution optimale.\\
 	
 	Nous devons aussi savoir contrôler le refroidissement. Un refroidissement très rapide peut causer des résultats loin de la solution optimale, et un refroidissement très lent peut prolonger le comportement chaotiques des températures élevées et causer un temps de calcule très élevé.
 	
@@ -200,7 +200,7 @@
         
         \begin{figure}
         	\begin{center}
-        		\includegraphics[width=1\textwidth]{best_b2_evaluation_diff recuit 2000 20000.png}
+        		\includegraphics[width=0.8\textwidth]{best_b2_evaluation_diff recuit 2000 20000.png}
         	\end{center}
         	\caption{Simulation sur b2 de l'algorithme recuit avec deux températures différentes}
         	\label{Figure1}
@@ -263,15 +263,15 @@
         Une multitudes d'initialisation sont possibles pour cet algorithme. On pourrait, bien que nous ne le faisons pas dans cette section, initialiser notre algorithme avec une approximation déjà faite. Le but étant que notre algorithme soit appliqué sur notre jeu de donnée sans étude préalable, on a opté pour une initialisation sans approximation préalable. Les graphes de la \hyperref[Figure4]{(Figure 4)} montrent en particulier que l'initialisation aléatoire est la meilleure.
 
         \begin{figure}
-          \includegraphics[width=0.3\textwidth]{best_b2_evaluation_genetic random init.png}
-          \includegraphics[width=0.3\textwidth]{best_b2_evaluation_genetic ones init.png}
-          \includegraphics[width=0.3\textwidth]{best_b2_evaluation_genetic zeros init.png}
+          \includegraphics[width=0.33\textwidth]{best_b2_evaluation_genetic random init.png}
+          \includegraphics[width=0.33\textwidth]{best_b2_evaluation_genetic ones init.png}
+          \includegraphics[width=0.32\textwidth]{best_b2_evaluation_genetic zeros init.png}
           \caption{Simulation sur b2 de l'algorithme génétique avec différentes initialisations}
           \label{Figure4}
         \end{figure}
         
 
-        En effet, il est clair que l'initialisation uniquement avec des zeros ne convient absolument pas dû aux barres d'erreurs très grandes qu'il présente. Cela veut dire en particulier qu'il y a beaucoup de cas qui ne converge pas bien. De plus, on voit ici que l'algorithme initialisé aléatoirement converge plus rapidement avec des barres d'erreur bien plus petites que celui initialisé qu'avec des 1.
+        En effet, il est clair que l'initialisation uniquement avec des zéros ne convient absolument pas dû aux barres d'erreurs très grandes qu'il présente. Cela veut dire en particulier qu'il y a beaucoup de cas qui ne converge pas bien. De plus, on voit ici que l'algorithme initialisé aléatoirement converge plus rapidement avec des barres d'erreur bien plus petites que celui initialisé qu'avec des 1.
         Il est ainsi préférable d'utiliser une initialisation aléatoire.
 
         \subsubsection{Max population}
@@ -296,7 +296,7 @@
 
         \begin{figure}
           \begin{center}
-            \includegraphics[width=1\textwidth]{best_b2_evaluation_diff genetic multiple.png}
+            \includegraphics[width=0.8\textwidth]{best_b2_evaluation_diff genetic multiple.png}
           \end{center}
           \caption{Simulation sur b2 de l'algorithme recuit simple et recuit multiple}
           \label{Figure6}
