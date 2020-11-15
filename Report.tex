@@ -61,6 +61,7 @@
 	\end{itemize}
 	
 	\subsection{Taux d'approximation\label{taux}} 
+	Soit $T^*$ une solution optimale. On sait déjà qu'une solution $C$ donnée par le cycle eulérien vérifie $C=2T^*$. On a solution $C'$ en prenant les sommets par ordre de première apparition et on a $C'\leq C$. Soit $A$ une solution de l'approximation. On a $A\leq C'$, car, on peut supprimer, au minimum, une arrête de $C'$ afin de ne pas avoir de cycles. Alors, on a $A\leq 2T^*$ par transitivité. Comme on renvoie l'union des arrêtes, on a $Resultat\leq A$. On a donc 2-approximation.
 	
 	\section{Méta-heuristiques\label{Méta-heuristiques}}
 	L'approximation est une bonne façon de trouver les solutions, mais, il n'est pas évident de trouver un algorithme d'approximation. Dans cette section, nous allons voir deux algorithmes, de la famille des algorithmes méta-heuristiques, qui sont probabilistes et donnent des résultats différents à chaque exécution. L'intérêt de ces algorithmes est dans leur flexibilité et la facilité d'implémentation. En effet, contrairement au cas d'approximation, nous n'avons pas besoin de chercher une manière spécifique de trouver la meilleure solution. Dans de nombreux cas, on n'a toujours pas trouver un algorithme d'approximation et dans tant d'autres, les taux d'approximations sont assez élevés. Pour utiliser mes méta-heuristiques, il suffit d'adapter les algorithmes au problème et utiliser le plus pertinent selon les cas.\\
@@ -147,9 +148,8 @@
 		\item[2.] On génère une nouvelle \hyperref[Génération]{génération}
 		\item[3.] On \hyperref[sélection]{garde} les $m$ meilleures.
 		\item[4.] Si le meilleur de la population est meilleur que $best$, alors, on remplace $best$.
-		\item[5.] Sinon, on pose $prob = e^{-\frac{(evaluation(voisin) - evaluation(best))}{T}}$
-		\item[6.] On répète $n$ fois à partir de 2.
-		\item[7.] On renvoie $best$
+		\item[5.] On répète $n$ fois à partir de 2.
+		\item[6.] On renvoie $best$
 	\end{itemize}
 	
 	
